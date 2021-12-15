@@ -138,15 +138,3 @@ export default {
   border-radius: 10px;
 }
 </style>
-
-<style>
-.el-tabs__active-bar {
-  background-color: #7397ab !important;
-}
-.el-tabs__item.is-active {
-  color: #7397ab !important;
-}
-.el-tabs__item {
-  color: white !important;
-}
-</style>

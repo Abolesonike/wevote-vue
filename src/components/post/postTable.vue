@@ -3,6 +3,7 @@
   <h2 v-if="status == 0">待审核列表</h2>
   <h2 v-if="status == 2">审核未通过通过列表</h2>
   <h2 v-if="status == 3">已删除列表</h2>
+  <h2 v-if="status == 4">举报处理</h2>
   <el-table :data="tableData" stripe style="width: 100%">
     <el-table-column prop="title" label="标题" width="180" />
     <el-table-column prop="postUserId" label="发送者id" width="180" />

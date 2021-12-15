@@ -35,6 +35,9 @@
             <router-link to="/back/postTable/3">
               <el-menu-item index="1-4"> 回收站 </el-menu-item>
             </router-link>
+            <router-link to="/back/postTable/4">
+              <el-menu-item index="1-5"> 举报处理 </el-menu-item>
+            </router-link>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>

@@ -11,19 +11,30 @@
         ></el-col>
         <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="14">
           <position-card :msg="positionData"></position-card>
-          <el-card class="communityContain"
-            ><el-row :gutter="25">
-              <el-col
-                :xs="24"
-                :sm="12"
-                :md="12"
-                :lg="8"
-                :xl="8"
-                v-for="count in 9"
-                v-bind:key="count"
-                ><community-card :msg="1"></community-card
-              ></el-col> </el-row
-          ></el-card>
+          <el-card class="communityContain">
+            <el-tabs tab-position="left">
+              <el-tab-pane label="推荐"
+                ><el-row :gutter="25">
+                  <el-col
+                    :xs="24"
+                    :sm="12"
+                    :md="12"
+                    :lg="8"
+                    :xl="8"
+                    v-for="count in 9"
+                    v-bind:key="count"
+                    ><community-card :msg="1"></community-card
+                  ></el-col> </el-row
+              ></el-tab-pane>
+              <el-tab-pane label="日榜">Config</el-tab-pane>
+              <el-tab-pane label="新社区">Role</el-tab-pane>
+              <el-tab-pane label="影视">Task</el-tab-pane>
+              <el-tab-pane label="影视">Task</el-tab-pane>
+              <el-tab-pane label="影视">Task</el-tab-pane>
+              <el-tab-pane label="影视">Task</el-tab-pane>
+              <el-tab-pane label="影视">Task</el-tab-pane>
+            </el-tabs></el-card
+          >
           <el-pagination
             :pager-count="5"
             background
