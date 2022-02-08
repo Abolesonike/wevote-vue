@@ -6,11 +6,12 @@ export const test = function () {
   return req("get", "/post-service/post/test");
 };
 
-// 查询所有帖子
-export const addPost = function (post, voteList) {
+export const addPost = function (post, voteList, postUserId) {
+  console.log(postUserId);
   return req("post", "/post-service/post/addPost", {
     post,
     voteList,
+    postUserId,
   });
 };
 
@@ -32,6 +33,15 @@ export const postList = function (pageNum, pageSize) {
 // 查询指定状态所有帖子
 export const postListStatus = function (pageNum, pageSize, status) {
   return req("get", "/post-service/post/postListStatus", {
+    pageNum: pageNum,
+    pageSize: pageSize,
+    status: status,
+  });
+};
+
+// 查询指定状态所有帖子
+export const postVoListStatus = function (pageNum, pageSize, status) {
+  return req("get", "/post-service/post/postVoListStatus", {
     pageNum: pageNum,
     pageSize: pageSize,
     status: status,

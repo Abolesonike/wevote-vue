@@ -106,6 +106,12 @@ export default {
           resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
             "YYYY-MM-DD HH:mm:ss"
           );
+          // 去掉内容中的图片
+          const data = removeImg(resp.list[i].content);
+          resp.list[i].content = data["content"];
+          resp.list[i].imgList = data["imgs"];
+          // 去掉投票
+          resp.list[i].content = removeVote(resp.list[i].content);
         }
         _this.postDataList = resp.list;
         _this.pageInfo.pages = resp.pages * 10;

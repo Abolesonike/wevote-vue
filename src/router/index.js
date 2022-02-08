@@ -22,6 +22,7 @@ const communityCreateView = () => import("@/views/front/communityCreateView");
 const communityManageView = () => import("@/views/front/communityManageView");
 const userHomePage = () => import("@/views/front/user/userHomePage");
 const login = () => import("@/views/login/login");
+const signIn = () => import("@/views/login/signIn");
 
 const postTable = () => import("../components/post/postTable");
 const userTable = () => import("../components/sysUser/userTable");
@@ -79,6 +80,11 @@ const routes = [
     component: login,
   },
   {
+    path: "/signIn",
+    name: "SignIn",
+    component: signIn,
+  },
+  {
     path: "/back",
     name: "name",
     component: IndexB,
@@ -102,15 +108,8 @@ const routes = [
 const router = createRouter({
   // history: createWebHistory(process.env.BASE_URL),
   history: createWebHashHistory(process.env.BASE_URL),
-  scrollBehavior(to) {
-    if (to.hash) {
-      return {
-        selector: to.hash,
-        behavior: "smooth",
-      };
-    }
-  },
   routes,
+  scrollBehavior: () => ({ y: 0 }),
 });
 
 export default router;

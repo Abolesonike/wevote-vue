@@ -37,6 +37,7 @@ import TEditor from "@/components/tools/TEditor.vue";
 import { ElMessage } from "element-plus";
 
 import { addPost } from "@/api/post/post";
+import { getLoginUserId } from "@/api/user/user";
 
 export default {
   name: "postCreateCard",
@@ -86,15 +87,21 @@ export default {
               vote.chooses = chooses;
             }
             console.log(this.$refs.content.voteData);
-            addPost(_this.postData, this.$refs.content.voteData).then(function (
-              resp
-            ) {
-              ElMessage({
-                message: "发布成功！",
-                type: "success",
+            let postUserId = "";
+            getLoginUserId().then(function (resp) {
+              postUserId = resp;
+              addPost(
+                _this.postData,
+                _this.$refs.content.voteData,
+                postUserId
+              ).then(function (resp) {
+                ElMessage({
+                  message: "发布成功！",
+                  type: "success",
+                });
+                _this.$router.go(-1);
+                console.log(resp);
               });
-              _this.$router.go(-1);
-              console.log(resp);
             });
           } else {
             ElMessage.error("请输入正文内容！");

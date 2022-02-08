@@ -79,7 +79,7 @@ export default {
     },
     gotoSignIn() {
       const _this = this;
-      _this.$router.push("/signIn");
+      _this.$router.replace("/signIn");
     },
     getVerCode() {
       const _this = this;

@@ -7,3 +7,8 @@ export const findById = function (id) {
 export const findByIds = function (ids) {
   return req("get", "/post-service/vote/findByIds", { ids: ids });
 };
+
+export const voteFor = function (vote) {
+  console.log(vote);
+  return req("post", "/post-service/vote/voteFor", vote);
+};

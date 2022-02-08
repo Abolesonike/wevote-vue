@@ -11,7 +11,7 @@
     </el-descriptions-item>
     <el-descriptions-item :span="2">
       <template #label> 发送时间 </template>
-      {{ postData.postTime }}
+      {{ postData.createTime }}
     </el-descriptions-item>
     <el-descriptions-item>
       <template #label> 状态 </template>

@@ -5,10 +5,10 @@
   <h2 v-if="status == 3">已删除列表</h2>
   <h2 v-if="status == 4">举报处理</h2>
   <el-table :data="tableData" stripe style="width: 100%">
-    <el-table-column prop="title" label="标题" width="180" />
-    <el-table-column prop="postUserId" label="发送者id" width="180" />
-    <el-table-column prop="postTime" label="发布时间" />
-    <el-table-column prop="status" label="状态" />
+    <el-table-column prop="title" label="标题" width="400" />
+    <el-table-column prop="postUserName" label="发送者" width="200" />
+    <el-table-column prop="createTime" label="发布时间" />
+    <el-table-column prop="community" label="社区" />
     <el-table-column label="操作">
       <template v-slot="scope">
         <el-button type="primary" @click="showDetail(scope.row)" plain
@@ -92,7 +92,7 @@
 </template>
 
 <script>
-import { postListStatus, changeStatus, deletePost } from "@/api/post/post";
+import {postListStatus, changeStatus, deletePost, postVoListStatus} from "@/api/post/post";
 import dayjs from "dayjs";
 import postDetail from "@/components/post/postDetail";
 import { ElNotification } from "element-plus";
@@ -119,15 +119,15 @@ export default {
     loadData(status) {
       // 加载帖子列表
       const _this = this;
-      postListStatus(
+      postVoListStatus(
         this.pageInfo.pageNum,
         this.pageInfo.pageSize,
         status
       ).then(function (resp) {
-        //console.log(resp);
+        console.log(resp);
         for (let i = 0; i < resp.list.length; i++) {
           // 格式化日期
-          resp.list[i].postTime = dayjs(resp.list[i].postTime).format(
+          resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
             "YYYY-MM-DD HH:mm:ss"
           );
         }
@@ -143,7 +143,7 @@ export default {
           // console.log(resp);
           for (let i = 0; i < resp.list.length; i++) {
             // 格式化日期
-            resp.list[i].postTime = dayjs(resp.list[i].postTime).format(
+            resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
               "YYYY-MM-DD HH:mm:ss"
             );
           }

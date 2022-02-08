@@ -64,6 +64,12 @@ import { removeVote } from "@/tools/removeImg";
 export default {
   name: "postDetail",
   components: { commentInput, commentCard, voteCard },
+  provide() {
+    //父组件中通过provide来提供变量，在子组件中通过inject来注入变量。
+    return {
+      reload: this.reload,
+    };
+  },
   data() {
     return {
       postData: {},
@@ -73,9 +79,9 @@ export default {
   methods: {
     getPostData() {
       const _this = this;
-      findById(this.$route.params.id).then(function (resp) {
+      findById(_this.$route.params.id).then(function (resp) {
         if (resp !== null) {
-          // console.log(resp);
+          console.log(_this.$route.params.id);
           _this.postData = resp;
           _this.postData.content = removeVote(_this.postData.content);
           if (_this.postData.votes !== "") {
