@@ -9,6 +9,6 @@ export const findByIds = function (ids) {
 };
 
 export const voteFor = function (vote) {
-  console.log(vote);
+  //console.log(vote);
   return req("post", "/post-service/vote/voteFor", vote);
 };

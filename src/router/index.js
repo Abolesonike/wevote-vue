@@ -1,5 +1,5 @@
-// import { createRouter, createWebHistory } from "vue-router";
-import { createRouter, createWebHashHistory } from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
+// import { createRouter, createWebHashHistory } from "vue-router";
 // import Index from "../views/front/index";
 // import postDetailView from "@/views/front/postDetailView";
 // import postCreateView from "@/views/front/postCreateView";
@@ -26,7 +26,8 @@ const signIn = () => import("@/views/login/signIn");
 
 const postTable = () => import("../components/post/postTable");
 const userTable = () => import("../components/sysUser/userTable");
-const permsTable = () => import("../components/sysPerms/permsTable");
+const permsTable = () => import("../components/back/sysPerms/permsTable");
+const roleTable = () => import("../components/back/sysRole/roleTable");
 const IndexB = () => import("../views/back/index");
 const routes = [
   {
@@ -101,13 +102,17 @@ const routes = [
         path: "permsTable",
         component: permsTable,
       },
+      {
+        path: "roleTable",
+        component: roleTable,
+      },
     ],
   },
 ];
 
 const router = createRouter({
-  // history: createWebHistory(process.env.BASE_URL),
-  history: createWebHashHistory(process.env.BASE_URL),
+  history: createWebHistory(process.env.BASE_URL),
+  //history: createWebHashHistory(process.env.BASE_URL),
   routes,
   scrollBehavior: () => ({ y: 0 }),
 });

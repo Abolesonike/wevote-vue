@@ -157,7 +157,7 @@ export default {
       const _this = this;
       _this.rowData = row; // 传递数据
       _this.dialogVisible = true; // 显示弹框
-      console.log(row);
+      // console.log(row);
     },
     changeStatus(id, status) {
       // 改变帖子状态

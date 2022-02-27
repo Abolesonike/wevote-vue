@@ -4,7 +4,7 @@ import VueCookies from "vue-cookies";
 //创建axios的一个实例
 const instance = axios.create({
   baseURL: "http://localhost:80", //接口统一域名
-  timeout: 6000, //设置超时
+  timeout: 60000, //设置超时
   withCredentials: true, // 允许携带 cookie
 });
 

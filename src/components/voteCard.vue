@@ -235,7 +235,7 @@ export default {
   color: #d1d9e0;
 }
 
-.vote-divider {
+>>>.vote-divider {
   margin: 5px 0;
 }
 

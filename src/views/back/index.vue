@@ -59,11 +59,8 @@
             <router-link to="/back/permsTable">
               <el-menu-item index="3-1"> 系统权限 </el-menu-item>
             </router-link>
-            <router-link to="/back/postTable/0">
+            <router-link to="/back/roleTable">
               <el-menu-item index="3-2"> 角色管理 </el-menu-item>
-            </router-link>
-            <router-link to="/back/postTable/2">
-              <el-menu-item index="3-3"> 角色权限管理 </el-menu-item>
             </router-link>
           </el-sub-menu>
           <el-menu-item index="4">
