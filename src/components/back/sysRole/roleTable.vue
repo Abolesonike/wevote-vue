@@ -1,11 +1,15 @@
 <template>
   <h2>权限列表</h2>
-  <el-table :data="roleTableData" stripe style="width: 100%">
+  <el-table
+    :data="roleTableData"
+    stripe
+    style="width: 100%; margin-bottom: 10px"
+  >
     <el-table-column prop="roleId" label="角色编号" width="180">
     </el-table-column>
     <el-table-column prop="roleName" label="角色名称" width="180">
     </el-table-column>
-    <el-table-column prop="createDate" label="创建时间"> </el-table-column>
+    <el-table-column prop="roleDesc" label="描述"> </el-table-column>
     <el-table-column label="启用状态">
       <template v-slot="scope">
         <el-switch
@@ -14,11 +18,12 @@
           inactive-color="#ff4949"
           active-value="1"
           inactive-value="0"
-          @change="changeEnableStatus(scope.row.roleId, scope.row.enableStatus)"
+          @change="changeEnableStatus(scope.row)"
         >
         </el-switch>
       </template>
     </el-table-column>
+    <el-table-column prop="createDate" label="创建时间"> </el-table-column>
     <el-table-column prop="modifyTime" label="修改时间"> </el-table-column>
     <el-table-column label="操作">
       <template v-slot="scope">
@@ -28,7 +33,7 @@
       </template>
     </el-table-column>
   </el-table>
-
+  <el-button type="primary" @click="showAddRoleForm(null)">添加角色</el-button>
   <el-dialog
     title="权限分配"
     v-model="roleDialogVisible"
@@ -54,10 +59,51 @@
       </span>
     </template>
   </el-dialog>
+
+  <el-dialog
+    title="添加角色"
+    v-model="roleAddDialogVisible"
+    width="20%"
+    destroy-on-close
+  >
+    <el-form label-position="top" :model="addRoleFrom">
+      <el-form-item label="角色名称">
+        <el-input v-model="addRoleFrom.roleName"></el-input>
+      </el-form-item>
+      <el-form-item label="描述">
+        <el-input v-model="addRoleFrom.roleDesc"></el-input>
+      </el-form-item>
+      <el-form-item label="权限分配">
+        <el-tree
+          :props="permsTree"
+          :data="permsTreeData"
+          :default-checked-keys="checkedPerms"
+          node-key="permsId"
+          show-checkbox
+          @check-change="handlePermsCheckChange"
+          ref="tree"
+        >
+        </el-tree>
+      </el-form-item>
+    </el-form>
+
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="roleAddDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addRole()">确 定</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
-import { assignPermissions, roleList } from "@/api/role/role";
+import {
+  add,
+  assignPermissions,
+  checkIsAssigned,
+  roleList,
+  update,
+} from "@/api/role/role";
 
 import dayjs from "dayjs";
 import { permsTreeList } from "@/api/perms/perms";
@@ -71,6 +117,8 @@ export default {
       roleTableData: [],
       // 权限分配弹窗是否可见标志
       roleDialogVisible: false,
+      // 添加角色弹窗是否可见标志
+      roleAddDialogVisible: false,
       // 页面树形控件数据
       permsTree: {
         // 树形控件的label对应数据的path
@@ -83,6 +131,11 @@ export default {
       permsTreeData: [],
       // 当前编辑角色的id
       modifyRoleId: 0,
+      // 添加角色
+      addRoleFrom: {
+        roleName: "",
+        roleDesc: "",
+      },
       pageInfo: {
         pageNum: 1,
         pageSize: 10,
@@ -97,7 +150,7 @@ export default {
       roleList(this.pageInfo.pageNum, this.pageInfo.pageSize).then(function (
         resp
       ) {
-        console.log(resp.list);
+        // console.log(resp.list);
         for (let i = 0; i < resp.list.length; i++) {
           // 格式化日期
           resp.list[i].createDate = dayjs(resp.list[i].createDate).format(
@@ -111,9 +164,50 @@ export default {
         _this.pages = resp.pages * 10;
       });
     },
-    changeEnableStatus(roleId, enableStatus) {
+    changeEnableStatus(row) {
       // 改变是否启用时，触发的函数
-      console.log(roleId, enableStatus);
+      const _this = this;
+      checkIsAssigned(row.roleId).then(function (resp) {
+        // console.log(resp);
+        if (resp === false) {
+          ElNotification({
+            title: "操作失败",
+            message: "角色已经被分配给用户，不能停用！",
+            type: "error",
+            position: "bottom-right",
+          });
+          _this.loadData();
+        } else {
+          // console.log(row);
+          let message = "";
+          if (row.enableStatus === "0") {
+            message = "禁用";
+          } else {
+            message = "启用";
+          }
+          // 将格式化的日期改回原来的格式
+          row.createDate = dayjs(row.createDate).format("YYYY-MM-DDTHH:mm:ss");
+          row.modifyTime = dayjs(row.modifyTime).format("YYYY-MM-DDTHH:mm:ss");
+          update(row).then(function (resp) {
+            if (resp === true) {
+              _this.loadData();
+              ElNotification({
+                title: "操作成功",
+                message: message + "成功!",
+                type: "success",
+                position: "bottom-right",
+              });
+            } else {
+              ElNotification({
+                title: "操作失败",
+                message: "状态变更失败",
+                type: "error",
+                position: "bottom-right",
+              });
+            }
+          });
+        }
+      });
     },
     openRoleTree(roleId) {
       // 打开分配权限时调用的函数
@@ -122,7 +216,7 @@ export default {
       _this.checkedPerms = [];
       _this.modifyRoleId = roleId;
       permsTreeList(roleId).then(function (resp) {
-        console.log(resp);
+        // console.log(resp);
         _this.permsTreeData = resp.parentList;
         _this.checkedPerms = resp.permsIds;
         _this.roleDialogVisible = true;
@@ -130,7 +224,7 @@ export default {
     },
     handlePermsCheckChange(data, checked) {
       // 改变权限时调用的函数
-      //console.log(data, checked, indeterminate);
+      //console.log(data, checked);
       const _this = this;
       if (checked === false && data.children.length === 0) {
         _this.checkedPerms.splice(_this.checkedPerms.indexOf(data.permsId), 1);
@@ -167,6 +261,42 @@ export default {
       _this.permsTreeData = [];
       _this.checkedPerms = [];
       _this.modifyRoleId = 0;
+    },
+    showAddRoleForm() {
+      const _this = this;
+      permsTreeList(0).then(function (resp) {
+        // console.log(resp);
+        _this.permsTreeData = resp.parentList;
+        _this.checkedPerms = resp.permsIds;
+        _this.roleAddDialogVisible = true;
+      });
+    },
+    addRole() {
+      const _this = this;
+      _this.roleAddDialogVisible = false;
+      add(_this.checkedPerms, _this.addRoleFrom).then(function (resp) {
+        if (resp === true) {
+          ElNotification({
+            title: "操作成功",
+            message: resp.message,
+            type: "success",
+            position: "bottom-right",
+          });
+          _this.loadData();
+        } else {
+          ElNotification({
+            title: "操作失败",
+            message: resp.message,
+            type: "error",
+            position: "bottom-right",
+          });
+        }
+      });
+      _this.permsTreeData = [];
+      _this.checkedPerms = [];
+      _this.modifyRoleId = 0;
+      _this.addRoleFrom.roleName = "";
+      _this.addRoleFrom.roleDesc = "";
     },
   },
 

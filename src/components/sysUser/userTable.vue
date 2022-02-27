@@ -6,8 +6,26 @@
     <el-table-column prop="headUrl" label="头像" width="180" />
     <el-table-column prop="email" label="邮箱" />
     <el-table-column prop="tel" label="电话" />
+    <el-table-column label="角色" width="150">
+      <template v-slot="scope">
+        <el-select
+          v-model="scope.row.roleName"
+          class="m-2"
+          placeholder="Select"
+          size="small"
+          @change="changeRole(scope.row)"
+        >
+          <el-option
+            v-for="item in roleList"
+            :key="item.roleId"
+            :label="item.roleName"
+            :value="item.roleId"
+          >
+          </el-option>
+        </el-select>
+      </template>
+    </el-table-column>
     <el-table-column prop="createTime" label="创建时间" />
-    <el-table-column prop="modifyTime" label="修改时间" />
     <el-table-column label="操作">
       <template v-slot="scope">
         <el-button type="primary" @click="showDetail(scope.row)" plain
@@ -70,10 +88,12 @@ import {
   changeEnable,
   update,
   deleteById,
+  changeRole,
 } from "@/api/user/user";
 import userDetail from "@/components/sysUser/userDetail";
 import dayjs from "dayjs";
 import { ElNotification } from "element-plus";
+import { findAllByEnableStatus } from "@/api/role/role";
 
 export default {
   name: "userTable",
@@ -91,6 +111,8 @@ export default {
       deleteUserIdTemp: -1,
       rowData: {},
       enable: 0,
+      // 启用角色列表
+      roleList: [],
     };
   },
   methods: {
@@ -102,7 +124,7 @@ export default {
         this.pageInfo.pageSize,
         enable
       ).then(function (resp) {
-        console.log(resp);
+        //console.log(resp);
         for (let i = 0; i < resp.list.length; i++) {
           // 格式化日期
           resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
@@ -114,6 +136,10 @@ export default {
         }
         _this.tableData = resp.list;
         _this.pages = resp.pages * 10;
+      });
+      // 查询角色列表
+      findAllByEnableStatus(1).then(function (resp) {
+        _this.roleList = resp;
       });
     },
     handleCurrentChange(currentPageNum) {
@@ -210,6 +236,30 @@ export default {
           });
           _this.loadData(_this.enable);
           _this.deleteDialogVisible = false;
+        }
+      });
+    },
+    changeRole(row) {
+      const _this = this;
+      const userId = row.userId;
+      const roleId = row.roleName;
+      changeRole(userId, roleId).then(function (resp) {
+        if (resp === true) {
+          ElNotification({
+            title: "操作成功",
+            message: "角色分配成功",
+            type: "success",
+            position: "bottom-right",
+          });
+          _this.loadData(_this.enable);
+        } else {
+          ElNotification({
+            title: "操作失败",
+            message: "角色分配失败",
+            type: "error",
+            position: "bottom-right",
+          });
+          _this.loadData(_this.enable);
         }
       });
     },

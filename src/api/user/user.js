@@ -29,6 +29,14 @@ export const update = function (sysUser) {
   return req("put", "/auth-service/sysUser/updateById", sysUser);
 };
 
+// 修改一个用户
+export const changeRole = function (userId, roleId) {
+  return req("put", "/auth-service/sysUser/changeRole", {
+    userId: userId,
+    roleId: roleId,
+  });
+};
+
 // 删除一个用户
 export const deleteById = function (id) {
   return req("delete", "/auth-service/sysUser/deleteById", {
