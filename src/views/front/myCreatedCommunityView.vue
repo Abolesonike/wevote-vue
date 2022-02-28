@@ -19,9 +19,9 @@
                 :md="12"
                 :lg="8"
                 :xl="8"
-                v-for="count in 9"
-                v-bind:key="count"
-                ><community-card :msg="2"></community-card
+                v-for="community in communityList"
+                v-bind:key="community.id"
+                ><community-card :communityData="community" :type="2"></community-card
               ></el-col> </el-row
           ></el-card>
           <el-pagination
@@ -49,6 +49,8 @@ import AsideMenu from "@/components/AsideMenu";
 import positionCard from "@/components/positionCard";
 import communityCard from "@/components/communityCard";
 import Footer from "@/components/Footer";
+import { select } from "@/api/community/community";
+import { getLoginUserId } from "@/api/user/user";
 export default {
   name: "myCreatedCommunityView",
   components: { Header, AsideMenu, positionCard, communityCard, Footer },
@@ -58,7 +60,20 @@ export default {
         { name: "首页", path: "/" },
         { name: "我创建的社区", path: "" },
       ],
+      community: {
+        owner: 0,
+      },
+      communityList: [],
     };
+  },
+  mounted() {
+    const _this = this;
+    getLoginUserId().then(function (resp) {
+      _this.community.owner = resp;
+      select(_this.community).then(function (resp) {
+        _this.communityList = resp;
+      });
+    });
   },
 };
 </script>

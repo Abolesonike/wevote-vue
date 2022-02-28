@@ -20,7 +20,7 @@
               <span style="font-size: small; color: whitesmoke">精华</span>
             </div></el-card
           >
-          <card></card>
+          <!--          <card></card>-->
           <el-pagination
             :pager-count="5"
             background
@@ -70,7 +70,7 @@
 import Header from "@/components/Header";
 import AsideMenu from "@/components/AsideMenu";
 import positionCard from "@/components/positionCard";
-import Card from "@/components/Card";
+// import Card from "@/components/Card";
 import communityNoticeCard from "@/components/communityNoticeCard";
 import communityInfoCard from "@/components/communityInfoCard";
 import Footer from "@/components/Footer";
@@ -79,7 +79,7 @@ export default {
   components: {
     Header,
     AsideMenu,
-    Card,
+    // Card,
     communityNoticeCard,
     communityInfoCard,
     Footer,

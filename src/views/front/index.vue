@@ -58,7 +58,7 @@ export default {
       postDataList: [], // 帖子数据
       pageInfo: {
         pageNum: 1, // 当前页
-        pageSize: 10, // 页大小
+        pageSize: 5, // 页大小
         pages: 10,
       },
       postStatus: 1, // 帖子状态，1表示审核通过
