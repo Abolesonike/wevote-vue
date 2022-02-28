@@ -21,7 +21,10 @@
                 :xl="8"
                 v-for="community in communityList"
                 v-bind:key="community.id"
-                ><community-card :communityData="community" :type="2"></community-card
+                ><community-card
+                  :communityData="community"
+                  :type="2"
+                ></community-card
               ></el-col> </el-row
           ></el-card>
           <el-pagination
