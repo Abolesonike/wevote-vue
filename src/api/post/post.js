@@ -48,6 +48,18 @@ export const postVoListStatus = function (pageNum, pageSize, status) {
   });
 };
 
+// 条件查询帖子
+export const selectPostVo = function (pageNum, pageSize, post) {
+  return req(
+    "post",
+    "/post-service/post/selectPostVo?pageNum=" +
+      pageNum +
+      "&pageSize=" +
+    + pageSize,
+    post
+  );
+};
+
 // 改变指定帖子的状态
 export const changeStatus = function (id, status) {
   return req("get", "/post-service/post/changeStatus", {

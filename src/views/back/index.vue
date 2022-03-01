@@ -39,6 +39,21 @@
               <el-menu-item index="1-5"> 举报处理 </el-menu-item>
             </router-link>
           </el-sub-menu>
+          <el-sub-menu index="5">
+            <template #title>
+              <el-icon><Document /></el-icon>
+              <span>社区管理</span>
+            </template>
+            <router-link to="/back/communityTable/1">
+              <el-menu-item index="5-1"> 审核通过 </el-menu-item>
+            </router-link>
+            <router-link to="/back/communityTable/2">
+              <el-menu-item index="5-2"> 申请审核 </el-menu-item>
+            </router-link>
+            <router-link to="/back/communityClassificationTable/1">
+              <el-menu-item index="5-2"> 分类管理 </el-menu-item>
+            </router-link>
+          </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
               <el-icon><IconMenu /></el-icon>
@@ -70,7 +85,7 @@
         </el-menu>
       </el-aside>
       <el-container>
-        <el-main><router-view></router-view></el-main>
+        <el-main> <router-view></router-view></el-main>
         <el-footer>Footer</el-footer>
       </el-container>
     </el-container>
@@ -92,6 +107,8 @@ export default {
     Setting,
     IconMenu,
   },
+  data() {},
+  methods: {},
 };
 </script>
 

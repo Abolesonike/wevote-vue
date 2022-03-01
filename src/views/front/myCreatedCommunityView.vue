@@ -23,18 +23,18 @@
                 v-bind:key="community.id"
                 ><community-card
                   :communityData="community"
-                  :type="2"
+                  :type="3"
                 ></community-card
               ></el-col> </el-row
           ></el-card>
-          <el-pagination
-            :pager-count="5"
-            background
-            layout="prev, pager, next"
-            :total="1000"
-            style="margin-bottom: 10px"
-          >
-          </el-pagination>
+          <!--          <el-pagination-->
+          <!--            :pager-count="5"-->
+          <!--            background-->
+          <!--            layout="prev, pager, next"-->
+          <!--            :total="1000"-->
+          <!--            style="margin-bottom: 10px"-->
+          <!--          >-->
+          <!--          </el-pagination>-->
         </el-col>
         <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="4"></el-col>
       </el-row>

@@ -5,30 +5,56 @@
       style="width: 100%"
       fit="contain"
     ></el-image>
-    <div><h4 style="margin: 0; color: #9d2933">生活区</h4></div>
-    <p style="margin: 0; font-size: small">
-      <i class="icon-yonghu iconfont"></i>社长:管理员
+    <div style="text-align: center">
+      <h4 style="margin: 0; color: #9d2933">{{ community.name }}</h4>
+    </div>
+    <p style="margin: 0; font-size: small; text-align: center">
+      <i class="icon-yonghu iconfont"></i>社长:{{community.owner}}
       <i class="icon-taolun iconfont"></i>帖子:1000
       <i class="icon-tuandui iconfont"></i>成员:200
     </p>
     <div style="height: 100px">
       <p style="margin: 0; font-size: small">
-        阿里妈妈MUX倾力打造的矢量图标管理、交流平台。 设计师将图标上传到
-        iconfont
-        平台，用户可以自定义下载多种格式的icon，平台也可将图标转换为字体，便于前端工程师自由调整与调用。
+        {{ community.introduction }}
       </p>
     </div>
-    <el-button type="primary" @click="createPost">交流发帖</el-button>
+    <div style="text-align: center">
+      <el-button type="primary" @click="createPost">交流发帖</el-button>
+    </div>
   </el-card>
 </template>
 
 <script>
+import { select } from "@/api/community/community";
+import {findUserById} from "@/api/user/user";
+
 export default {
   name: "communityInfoCard",
+  data() {
+    return {
+      community: {
+        id: 0,
+      },
+    };
+  },
   methods: {
     createPost() {
       this.$router.push("/postCreate");
     },
+    selectCommunity() {
+      const _this = this;
+      select(_this.community).then(function (resp) {
+        _this.community = resp[0];
+        findUserById(_this.community.owner).then(function (resp) {
+          _this.community.owner = resp.username;
+        });
+      });
+    },
+  },
+  mounted() {
+    const _this = this;
+    _this.community.id = Number(this.$route.path.split("&")[0].split("/")[2]);
+    _this.selectCommunity();
   },
 };
 </script>
@@ -39,6 +65,6 @@ export default {
   border: 0;
   margin: 10px;
   border-radius: 10px;
-  text-align: center;
+  /*text-align: center;*/
 }
 </style>

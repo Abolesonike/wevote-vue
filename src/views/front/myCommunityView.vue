@@ -20,12 +20,19 @@
               <span style="font-size: small; color: whitesmoke">精华</span>
             </div></el-card
           >
-          <!--          <card></card>-->
+
+          <card
+            v-for="postData in postDataList"
+            v-bind:key="postData"
+            :postData="postData"
+          >
+          </card>
           <el-pagination
             :pager-count="5"
             background
             layout="prev, pager, next"
-            :total="1000"
+            :total="pageInfo.pages"
+            @current-change="handleCurrentChange"
             style="margin-bottom: 10px"
           >
           </el-pagination>
@@ -70,16 +77,19 @@
 import Header from "@/components/Header";
 import AsideMenu from "@/components/AsideMenu";
 import positionCard from "@/components/positionCard";
-// import Card from "@/components/Card";
+import Card from "@/components/Card";
 import communityNoticeCard from "@/components/communityNoticeCard";
 import communityInfoCard from "@/components/communityInfoCard";
 import Footer from "@/components/Footer";
+import { selectPostVo } from "@/api/post/post";
+import dayjs from "dayjs";
+import { removeImg, removeVote } from "@/tools/removeImg";
 export default {
   name: "myCommunityView",
   components: {
     Header,
     AsideMenu,
-    // Card,
+    Card,
     communityNoticeCard,
     communityInfoCard,
     Footer,
@@ -90,13 +100,73 @@ export default {
       positionData: [
         { name: "首页", path: "/" },
         { name: "社区", path: "/community" },
-        { name: decodeURI(this.$route.path.split("/")[2]), path: "" },
+        { name: decodeURI(this.$route.path.split("&")[1]), path: "" },
       ],
+      post: {
+        status: 1,
+        community: 0,
+      },
+      postDataList: [], // 帖子数据
+      pageInfo: {
+        pageNum: 1, // 当前页
+        pageSize: 5, // 页大小
+        pages: 10,
+      },
     };
   },
   methods: {
     createPost() {
       this.$router.push("/postCreate");
+    },
+    loadData() {
+      // 加载帖子列表
+      const _this = this;
+      selectPostVo(
+        this.pageInfo.pageNum,
+        this.pageInfo.pageSize,
+        _this.post
+      ).then(function (resp) {
+        // console.log(resp);
+        for (let i = 0; i < resp.list.length; i++) {
+          // 格式化日期
+          resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
+          // 去掉内容中的图片
+          const data = removeImg(resp.list[i].content);
+          resp.list[i].content = data["content"];
+          resp.list[i].imgList = data["imgs"];
+          // 去掉投票
+          resp.list[i].content = removeVote(resp.list[i].content);
+          // console.log(resp.list[i].content)
+        }
+        _this.postDataList = resp.list;
+        _this.pageInfo.pages = resp.pages * 10;
+        // console.log(_this.postDataList);
+      });
+    },
+    handleCurrentChange(currentPageNum) {
+      // 翻页
+      const _this = this;
+      selectPostVo(currentPageNum, this.pageInfo.pageSize, _this.post).then(
+        function (resp) {
+          // console.log(resp);
+          for (let i = 0; i < resp.list.length; i++) {
+            // 格式化日期
+            resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+            );
+            // 去掉内容中的图片
+            const data = removeImg(resp.list[i].content);
+            resp.list[i].content = data["content"];
+            resp.list[i].imgList = data["imgs"];
+            // 去掉投票
+            resp.list[i].content = removeVote(resp.list[i].content);
+          }
+          _this.postDataList = resp.list;
+          _this.pageInfo.pages = resp.pages * 10;
+        }
+      );
     },
   },
   watch: {
@@ -104,6 +174,11 @@ export default {
       this.loading = true;
       this.$router.go(0);
     },
+  },
+  mounted() {
+    const _this = this;
+    _this.post.community = Number(this.$route.path.split("&")[0].split("/")[2]);
+    this.loadData();
   },
 };
 </script>

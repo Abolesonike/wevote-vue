@@ -47,7 +47,7 @@ import Card from "@/components/Card";
 import HotPost from "@/components/front/HotPost";
 import communityRecommend from "@/components/communityRecommend";
 import Footer from "@/components/Footer";
-import { postListStatus } from "@/api/post/post";
+import { selectPostVo } from "@/api/post/post";
 import { removeImg, removeVote } from "@/tools/removeImg";
 import dayjs from "dayjs";
 export default {
@@ -61,17 +61,20 @@ export default {
         pageSize: 5, // 页大小
         pages: 10,
       },
-      postStatus: 1, // 帖子状态，1表示审核通过
+      post: {
+        status: 1,
+        community: 0,
+      },
     };
   },
   methods: {
-    loadData(status) {
+    loadData() {
       // 加载帖子列表
       const _this = this;
-      postListStatus(
+      selectPostVo(
         this.pageInfo.pageNum,
         this.pageInfo.pageSize,
-        status
+        _this.post
       ).then(function (resp) {
         // console.log(resp);
         for (let i = 0; i < resp.list.length; i++) {
@@ -95,32 +98,29 @@ export default {
     handleCurrentChange(currentPageNum) {
       // 翻页
       const _this = this;
-      postListStatus(
-        currentPageNum,
-        this.pageInfo.pageSize,
-        this.postStatus
-      ).then(function (resp) {
-        // console.log(resp);
-        for (let i = 0; i < resp.list.length; i++) {
-          // 格式化日期
-          resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
-            "YYYY-MM-DD HH:mm:ss"
-          );
-          // 去掉内容中的图片
-          const data = removeImg(resp.list[i].content);
-          resp.list[i].content = data["content"];
-          resp.list[i].imgList = data["imgs"];
-          // 去掉投票
-          resp.list[i].content = removeVote(resp.list[i].content);
+      selectPostVo(currentPageNum, this.pageInfo.pageSize, _this.post).then(
+        function (resp) {
+          // console.log(resp);
+          for (let i = 0; i < resp.list.length; i++) {
+            // 格式化日期
+            resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
+              "YYYY-MM-DD HH:mm:ss"
+            );
+            // 去掉内容中的图片
+            const data = removeImg(resp.list[i].content);
+            resp.list[i].content = data["content"];
+            resp.list[i].imgList = data["imgs"];
+            // 去掉投票
+            resp.list[i].content = removeVote(resp.list[i].content);
+          }
+          _this.postDataList = resp.list;
+          _this.pageInfo.pages = resp.pages * 10;
         }
-        _this.postDataList = resp.list;
-        _this.pageInfo.pages = resp.pages * 10;
-      });
+      );
     },
   },
   mounted() {
-    const _this = this;
-    this.loadData(_this.postStatus);
+    this.loadData();
   },
 };
 </script>

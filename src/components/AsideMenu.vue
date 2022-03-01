@@ -20,8 +20,13 @@
         <i class="icon-shuqianshoucang iconfont" style="font-size: large"></i>
         <span> 我加入的社区</span>
       </template>
-      <el-menu-item index="/myCommunity/生活区">生活区</el-menu-item>
-      <el-menu-item index="/myCommunity/电影区">电影区</el-menu-item>
+      <el-menu-item
+        v-for="community in joinedCommunity"
+        v-bind:key="community.id"
+        :index="`/myCommunity/${community.id}&${community.name}`"
+        >{{ community.name }}</el-menu-item
+      >
+      <!--      <el-menu-item index="/myCommunity/电影区">电影区</el-menu-item>-->
     </el-sub-menu>
     <el-sub-menu index="4">
       <template #title>
@@ -30,7 +35,7 @@
       </template>
       <el-menu-item index="/createCommunity">创建社区</el-menu-item>
       <el-menu-item index="/myCreatedCommunity">我创建社区</el-menu-item>
-      <el-menu-item index="/communityManage/生活区">生活区</el-menu-item>
+      <!--      <el-menu-item index="/communityManage/生活区">生活区</el-menu-item>-->
     </el-sub-menu>
     <el-menu-item index="5">
       <i class="icon-tuandui iconfont" style="font-size: large"></i>
@@ -40,8 +45,34 @@
 </template>
 
 <script>
+import { selectUserJoinedComm } from "@/api/community/community";
+import { getLoginUserId } from "@/api/user/user";
+
 export default {
   name: "AsideMenu",
+  data() {
+    return {
+      // 加入的社区
+      joinedCommunity: [],
+      // 创建的社区
+      createdCommunity: [],
+    };
+  },
+  methods: {
+    getJoinedCommunity(userId) {
+      const _this = this;
+      selectUserJoinedComm(userId).then(function (resp) {
+        _this.joinedCommunity = resp;
+        //console.log(resp);
+      });
+    },
+  },
+  mounted() {
+    const _this = this;
+    getLoginUserId().then(function (resp) {
+      _this.getJoinedCommunity(resp);
+    });
+  },
 };
 </script>
 

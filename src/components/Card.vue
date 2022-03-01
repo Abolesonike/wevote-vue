@@ -10,7 +10,7 @@
       ></el-col>
       <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
         ><div>
-          <span class="post_username">{{ postUser.username }}</span>
+          <span class="post_username">{{ post.postUserName }}</span>
           <span class="post_time">&nbsp; {{ post.createTime }}</span>
         </div>
         <div>
@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import { findUserById } from "@/api/user/user";
 
 export default {
   name: "Card",
@@ -99,16 +98,11 @@ export default {
   data() {
     return {
       post: this.postData,
-      postUser: {},
       srcListSmall: this.postData.imgList,
       srcListBig: [],
     };
   },
   mounted() {
-    const _this = this;
-    findUserById(this.post.postUserId).then(function (resp) {
-      _this.postUser = resp;
-    });
     if (this.srcListSmall.length === 4) {
       this.srcListBig[0] = this.srcListSmall[3];
       this.srcListSmall.pop();

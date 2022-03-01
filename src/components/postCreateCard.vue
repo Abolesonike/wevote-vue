@@ -15,8 +15,13 @@
           placeholder="选择社区"
           style="width: 100%"
         >
-          <el-option label="生活区" value="1"></el-option>
-          <el-option label="电影区" value="2"></el-option>
+          <el-option
+            v-for="item in joinedCommunity"
+            :key="item.id"
+            :label="item.name"
+            :value="item.id"
+          >
+          </el-option>
         </el-select>
       </el-form-item>
       <!--      <el-form-item label="标签">-->
@@ -38,6 +43,7 @@ import { ElMessage } from "element-plus";
 
 import { addPost } from "@/api/post/post";
 import { getLoginUserId } from "@/api/user/user";
+import { selectUserJoinedComm } from "@/api/community/community";
 
 export default {
   name: "postCreateCard",
@@ -66,6 +72,8 @@ export default {
           },
         ],
       },
+      // 加入的社区
+      joinedCommunity: [],
     };
   },
   methods: {
@@ -114,6 +122,19 @@ export default {
         }
       });
     },
+    getJoinedCommunity(userId) {
+      const _this = this;
+      selectUserJoinedComm(userId).then(function (resp) {
+        _this.joinedCommunity = resp;
+        //console.log(resp);
+      });
+    },
+  },
+  mounted() {
+    const _this = this;
+    getLoginUserId().then(function (resp) {
+      _this.getJoinedCommunity(resp);
+    });
   },
 };
 </script>

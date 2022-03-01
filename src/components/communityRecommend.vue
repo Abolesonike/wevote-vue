@@ -6,7 +6,7 @@
       v-bind:key="community.id"
       style="width: 100%"
     >
-      <community-card :communityData="community" :type="2"></community-card>
+      <community-card :communityData="community" :type="1"></community-card>
     </div>
   </el-card>
 </template>
