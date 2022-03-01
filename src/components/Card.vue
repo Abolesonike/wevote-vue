@@ -25,9 +25,6 @@
     <div class="contentDiv" v-for="p in post.content" v-bind:key="p">
       <div v-html="p"></div>
     </div>
-    <!--    <div class="contentDiv">-->
-    <!--      <div v-html="post.content"></div>-->
-    <!--    </div>-->
     <!-- imgSmall -->
     <el-row :gutter="10">
       <el-col

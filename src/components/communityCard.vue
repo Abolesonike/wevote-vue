@@ -17,13 +17,21 @@
         {{ data.introduction }}
       </p>
     </div>
-    <el-button type="primary" v-show="this.c_type === 1" style="width: 100%"
+    <el-button
+      @click="gotoCommunity()"
+      type="primary"
+      v-show="this.c_type === 1"
+      style="width: 100%"
       >进入社区</el-button
     >
     <el-button type="primary" v-show="this.c_type === 2" style="width: 100%"
       >加入社区</el-button
     >
-    <el-button @click="gotoCommManage" type="primary" v-show="this.c_type === 3" style="width: 100%"
+    <el-button
+      @click="gotoCommManage"
+      type="primary"
+      v-show="this.c_type === 3"
+      style="width: 100%"
       >管理社区</el-button
     >
   </div>
@@ -43,10 +51,13 @@ export default {
     };
   },
   methods: {
+    gotoCommunity() {
+      this.$router.push("/myCommunity/" + this.data.id + "&" + this.data.name);
+    },
     gotoCommManage() {
       this.$router.push("/communityManage/生活区");
-    }
-  }
+    },
+  },
 };
 </script>
 

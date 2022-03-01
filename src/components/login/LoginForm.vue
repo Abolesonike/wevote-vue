@@ -67,6 +67,7 @@ export default {
             type: "success",
           });
           VueCookies.set("token", resp.token, "1D");
+          _this.$store.commit("setLoginUserId", resp.data.userId);
           _this.$router.push("/");
         } else if (resp.data === "用户不存在！") {
           ElMessage.error("用户不存在！");
