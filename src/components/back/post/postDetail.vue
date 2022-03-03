@@ -6,8 +6,8 @@
       {{ postData.title }}
     </el-descriptions-item>
     <el-descriptions-item>
-      <template #label> 发送者id </template>
-      {{ postData.postUserId }}
+      <template #label> 发送者 </template>
+      {{ postData.postUserName }}
     </el-descriptions-item>
     <el-descriptions-item :span="2">
       <template #label> 发送时间 </template>

@@ -1,10 +1,11 @@
 import axios from "axios";
 import VueCookies from "vue-cookies";
+import router from "@/router";
 
 //创建axios的一个实例
 const instance = axios.create({
   baseURL: "http://localhost:80", //接口统一域名
-  timeout: 60000, //设置超时
+  timeout: 10000, //设置超时
   withCredentials: true, // 允许携带 cookie
 });
 
@@ -26,6 +27,9 @@ instance.interceptors.request.use(
 //----------------- 二、响应拦截器 忽略
 instance.interceptors.response.use(
   function (response) {
+    if (response.data.code === 402) {
+      router.push("/login").then((r) => r);
+    }
     return response.data;
   },
   function (error) {

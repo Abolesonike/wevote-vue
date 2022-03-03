@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { getAllClassification } from "@/api/community/communityClassification";
+import { selectCommClassification } from "@/api/community/communityClassification";
 import { createCommunity } from "@/api/community/community";
 import { ElMessage } from "element-plus";
 import { getLoginUserId } from "@/api/user/user";
@@ -82,6 +82,9 @@ export default {
       },
       // 社区分类
       commClassification: [],
+      classification: {
+        status: 1,
+      },
       rules: {
         name: [
           {
@@ -110,7 +113,7 @@ export default {
   methods: {
     getClassification() {
       const _this = this;
-      getAllClassification(1).then(function (resp) {
+      selectCommClassification(_this.classification).then(function (resp) {
         console.log(resp);
         _this.commClassification = resp;
         _this.formData.classification = resp[0].id;

@@ -1,33 +1,9 @@
 <template>
   <h2>权限列表</h2>
-  <el-form :inline="true" class="demo-form-inline">
-    <el-space wrap :size="150">
-      <el-form-item label="描述">
-        <el-input placeholder="描述"></el-input>
-      </el-form-item>
-      <el-form-item label="路径">
-        <el-input placeholder="路径"></el-input>
-      </el-form-item>
-      <el-form-item label="创建日期">
-        <el-date-picker
-          v-model="dateRange"
-          type="daterange"
-          range-separator="To"
-          start-placeholder="开始日期"
-          end-placeholder="结束日期"
-        >
-        </el-date-picker>
-      </el-form-item>
-
-      <el-form-item>
-        <el-button type="primary">Query</el-button>
-      </el-form-item>
-    </el-space>
-  </el-form>
   <el-table
     :data="tableData"
     class="permsTable"
-    height="450"
+    height="620"
     :border="true"
     lazy
     :load="load"
@@ -147,7 +123,7 @@ export default {
     return {
       pageInfo: {
         pageNum: 1,
-        pageSize: 7,
+        pageSize: 10,
         currentPageNum: 1,
       },
       pages: 10,

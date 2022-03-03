@@ -24,7 +24,7 @@ export default {
       // 社区
       community: {
         // 社区状态
-        status: 1,
+        status: 2,
         // 社区分类
         classification: 0,
       },
@@ -32,24 +32,11 @@ export default {
       communityList: [],
     };
   },
-  methods: {
-    selectCommunity(tab) {
-      const _this = this;
-      if (tab !== null || tab !== "undefined") {
-        _this.community.classification = tab.props.name;
-      } else {
-        _this.community.classification = 0;
-      }
-      select(_this.community).then(function (resp) {
-        // console.log(resp);
-        _this.communityList = resp;
-      });
-    },
-  },
+  methods: {},
   mounted() {
     const _this = this;
-    select(_this.community).then(function (resp) {
-      _this.communityList = resp;
+    select(1, 3, _this.community).then(function (resp) {
+      _this.communityList = resp.list;
     });
   },
 };

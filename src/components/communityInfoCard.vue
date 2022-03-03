@@ -47,7 +47,7 @@ export default {
     },
     selectCommunity() {
       const _this = this;
-      select(_this.community).then(function (resp) {
+      select(1, 1, _this.community).then(function (resp) {
         _this.community = resp[0];
         findUserById(_this.community.owner).then(function (resp) {
           _this.community.owner = resp.username;

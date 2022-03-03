@@ -24,8 +24,11 @@ const userHomePage = () => import("@/views/front/user/userHomePage");
 const login = () => import("@/views/login/login");
 const signIn = () => import("@/views/login/signIn");
 
-const postTable = () => import("../components/post/postTable");
-const userTable = () => import("../components/sysUser/userTable");
+const postTable = () => import("../components/back/post/postTable");
+const userTable = () => import("../components/back/sysUser/userTable");
+const communityTable = () =>
+  import("../components/back/community/communityTable");
+const classification = () => import("../components/back/community/classification");
 const permsTable = () => import("../components/back/sysPerms/permsTable");
 const roleTable = () => import("../components/back/sysRole/roleTable");
 const IndexB = () => import("../views/back/index");
@@ -97,6 +100,14 @@ const routes = [
       {
         path: "userTable/:enable",
         component: userTable,
+      },
+      {
+        path: "communityTable/:status",
+        component: communityTable,
+      },
+      {
+        path: "classification",
+        component: classification,
       },
       {
         path: "permsTable",

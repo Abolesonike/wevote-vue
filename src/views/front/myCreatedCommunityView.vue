@@ -26,15 +26,16 @@
                   :type="3"
                 ></community-card
               ></el-col> </el-row
+            ><el-pagination
+              :pager-count="5"
+              background
+              layout="prev, pager, next"
+              :total="pages"
+              style="margin-bottom: 10px"
+              @current-change="handleCurrentChange"
+            >
+            </el-pagination
           ></el-card>
-          <!--          <el-pagination-->
-          <!--            :pager-count="5"-->
-          <!--            background-->
-          <!--            layout="prev, pager, next"-->
-          <!--            :total="1000"-->
-          <!--            style="margin-bottom: 10px"-->
-          <!--          >-->
-          <!--          </el-pagination>-->
         </el-col>
         <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="4"></el-col>
       </el-row>
@@ -67,14 +68,35 @@ export default {
         owner: 0,
       },
       communityList: [],
+      pageInfo: {
+        pageNum: 1,
+        pageSize: 9,
+      },
+      pages: 10,
     };
+  },
+  methods: {
+    handleCurrentChange(currentPageNum) {
+      // 翻页
+      const _this = this;
+      select(currentPageNum, _this.pageInfo.pageSize, _this.community).then(
+        function (resp) {
+          _this.communityList = resp.list;
+        }
+      );
+    },
   },
   mounted() {
     const _this = this;
     getLoginUserId().then(function (resp) {
       _this.community.owner = resp;
-      select(_this.community).then(function (resp) {
-        _this.communityList = resp;
+      select(
+        _this.pageInfo.pageNum,
+        _this.pageInfo.pageSize,
+        _this.community
+      ).then(function (resp) {
+        _this.communityList = resp.list;
+        _this.pages = resp.pages * 10;
       });
     });
   },

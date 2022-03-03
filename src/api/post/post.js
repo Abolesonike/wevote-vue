@@ -55,7 +55,7 @@ export const selectPostVo = function (pageNum, pageSize, post) {
     "/post-service/post/selectPostVo?pageNum=" +
       pageNum +
       "&pageSize=" +
-    + pageSize,
+      +pageSize,
     post
   );
 };

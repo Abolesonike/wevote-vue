@@ -90,7 +90,7 @@ import {
   deleteById,
   changeRole,
 } from "@/api/user/user";
-import userDetail from "@/components/sysUser/userDetail";
+import userDetail from "@/components/back/sysUser/userDetail";
 import dayjs from "dayjs";
 import { ElNotification } from "element-plus";
 import { findAllByEnableStatus } from "@/api/role/role";

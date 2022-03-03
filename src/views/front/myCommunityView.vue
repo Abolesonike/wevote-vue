@@ -103,7 +103,7 @@ export default {
         { name: decodeURI(this.$route.path.split("&")[1]), path: "" },
       ],
       post: {
-        status: 1,
+        status: 2,
         community: 0,
       },
       postDataList: [], // 帖子数据

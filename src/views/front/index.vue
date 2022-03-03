@@ -62,7 +62,7 @@ export default {
         pages: 10,
       },
       post: {
-        status: 1,
+        status: 2,
         community: 0,
       },
     };

@@ -49,16 +49,17 @@
                       :type="1"
                     ></community-card
                   ></el-col> </el-row
-              ></el-tab-pane> </el-tabs
+              ></el-tab-pane>
+              <el-pagination
+                :pager-count="5"
+                background
+                layout="prev, pager, next"
+                :total="pages"
+                style="margin-bottom: 10px"
+                @current-change="handleCurrentChange"
+              >
+              </el-pagination> </el-tabs
           ></el-card>
-          <!--          <el-pagination-->
-          <!--            :pager-count="5"-->
-          <!--            background-->
-          <!--            layout="prev, pager, next"-->
-          <!--            :total="1000"-->
-          <!--            style="margin-bottom: 10px"-->
-          <!--          >-->
-          <!--          </el-pagination>-->
         </el-col>
         <el-col :xs="18" :sm="18" :md="18" :lg="18" :xl="4"></el-col>
       </el-row>
@@ -76,8 +77,9 @@ import AsideMenu from "@/components/AsideMenu";
 import positionCard from "@/components/positionCard";
 import communityCard from "@/components/communityCard";
 import Footer from "@/components/Footer";
-import { getAllClassification } from "@/api/community/communityClassification";
+import { selectCommClassification } from "@/api/community/communityClassification";
 import { select } from "@/api/community/community";
+
 export default {
   name: "communityView",
   components: { Header, AsideMenu, positionCard, communityCard, Footer },
@@ -87,26 +89,43 @@ export default {
         { name: "首页", path: "/" },
         { name: "社区", path: "" },
       ],
-      // 社区分类
+      // 社区分类list
       commClassification: [],
+      classification: {
+        status: 1,
+      },
       // 社区
       community: {
         // 社区状态
-        status: 1,
+        status: 2,
         // 社区分类
         classification: 0,
       },
       // 查询到的社区列表
       communityList: [],
+      pageInfo: {
+        pageNum: 1,
+        pageSize: 9,
+      },
+      pages: 10,
     };
   },
   methods: {
     getClassification() {
       const _this = this;
-      getAllClassification(1).then(function (resp) {
+      selectCommClassification(_this.classification).then(function (resp) {
         //console.log(resp);
         _this.commClassification = resp;
       });
+    },
+    handleCurrentChange(currentPageNum) {
+      // 翻页
+      const _this = this;
+      select(currentPageNum, _this.pageInfo.pageSize, _this.community).then(
+        function (resp) {
+          _this.communityList = resp.list;
+        }
+      );
     },
     selectCommunity(tab) {
       const _this = this;
@@ -115,17 +134,27 @@ export default {
       } else {
         _this.community.classification = 0;
       }
-      select(_this.community).then(function (resp) {
+      select(
+        _this.pageInfo.pageNum,
+        _this.pageInfo.pageSize,
+        _this.community
+      ).then(function (resp) {
         // console.log(resp);
-        _this.communityList = resp;
+        _this.communityList = resp.list;
+        _this.pages = resp.pages * 10;
       });
     },
   },
   mounted() {
     const _this = this;
     this.getClassification();
-    select(_this.community).then(function (resp) {
-      _this.communityList = resp;
+    select(
+      _this.pageInfo.pageNum,
+      _this.pageInfo.pageSize,
+      _this.community
+    ).then(function (resp) {
+      _this.communityList = resp.list;
+      _this.pages = resp.pages * 10;
     });
   },
 };

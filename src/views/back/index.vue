@@ -23,19 +23,19 @@
               <el-icon><location /></el-icon>
               <span>帖子管理</span>
             </template>
-            <router-link to="/back/postTable/1">
+            <router-link to="/back/postTable/2">
               <el-menu-item index="1-1"> 审核通过 </el-menu-item>
             </router-link>
-            <router-link to="/back/postTable/0">
+            <router-link to="/back/postTable/1">
               <el-menu-item index="1-2"> 待审核 </el-menu-item>
             </router-link>
-            <router-link to="/back/postTable/2">
+            <router-link to="/back/postTable/3">
               <el-menu-item index="1-3"> 审核未通过 </el-menu-item>
             </router-link>
-            <router-link to="/back/postTable/3">
+            <router-link to="/back/postTable/4">
               <el-menu-item index="1-4"> 回收站 </el-menu-item>
             </router-link>
-            <router-link to="/back/postTable/4">
+            <router-link to="/back/postTable/5">
               <el-menu-item index="1-5"> 举报处理 </el-menu-item>
             </router-link>
           </el-sub-menu>
@@ -44,14 +44,20 @@
               <el-icon><Document /></el-icon>
               <span>社区管理</span>
             </template>
-            <router-link to="/back/communityTable/1">
+            <router-link to="/back/communityTable/2">
               <el-menu-item index="5-1"> 审核通过 </el-menu-item>
             </router-link>
-            <router-link to="/back/communityTable/2">
-              <el-menu-item index="5-2"> 申请审核 </el-menu-item>
+            <router-link to="/back/communityTable/1">
+              <el-menu-item index="5-2"> 社区审核 </el-menu-item>
             </router-link>
-            <router-link to="/back/communityClassificationTable/1">
-              <el-menu-item index="5-2"> 分类管理 </el-menu-item>
+            <router-link to="/back/communityTable/3">
+              <el-menu-item index="5-3"> 审核未通过 </el-menu-item>
+            </router-link>
+            <router-link to="/back/communityTable/4">
+              <el-menu-item index="5-4"> 隐藏社区 </el-menu-item>
+            </router-link>
+            <router-link to="/back/classification">
+              <el-menu-item index="5-5"> 分类管理 </el-menu-item>
             </router-link>
           </el-sub-menu>
           <el-sub-menu index="2">
@@ -107,7 +113,6 @@ export default {
     Setting,
     IconMenu,
   },
-  data() {},
   methods: {},
 };
 </script>
