@@ -1,5 +1,5 @@
 <template>
-  <div class="commentCard" v-for="(count, index) in 5" v-bind:key="count">
+  <div class="commentCard">
     <el-row>
       <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2"
         ><div>
@@ -10,49 +10,129 @@
       ></el-col>
       <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
         ><div>
-          <span class="post_username">云玩家</span> <br />
-          <span class="post_time"> 2021/10/26 17:13</span>
+          <span style="font-weight: bold">{{ comment.fromUserName }}</span>
+          <br />
+          <span style="font-size: 14px">{{ comment.createTime }}</span>
         </div>
       </el-col>
     </el-row>
-    <p>太棒啦！</p>
+    <p>{{ comment.content }}</p>
     <el-row>
       <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
         <i class="icon-zan iconfont"></i>
-        <span class="likeText"> {{ index }}</span>
+        <span class="likeText"> 0</span>
       </el-col>
       <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
-        <i class="icon-xiaoxi2 iconfont" @click="showCommentInput(index)"></i>
+        <i
+          class="icon-xiaoxi2 iconfont"
+          @click="commentInputShow = !commentInputShow"
+        ></i>
       </el-col>
     </el-row>
     <el-collapse-transition>
-      <div v-show="commentInputShow[index]">
-        <comment-input></comment-input>
+      <div v-show="commentInputShow">
+        <comment-input
+          :to-user-id="comment.fromUserId"
+          :type="2"
+          :belong="comment.id"
+          @commitComment="getComment"
+        ></comment-input>
       </div>
     </el-collapse-transition>
-    <el-divider class="comment-divider"></el-divider>
   </div>
+
+  <div
+    v-for="(comment2, index) in comment.replay2replay"
+    v-bind:key="comment2.id"
+    class="commentCard"
+  >
+    <el-row>
+      <el-col :span="20" :offset="1">
+        <div>
+          <el-row>
+            <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2"
+              ><div>
+                <el-avatar
+                  :size="40"
+                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                ></el-avatar></div
+            ></el-col>
+            <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
+              ><div>
+                <span style="font-weight: bold">{{
+                  comment2.fromUserName
+                }}</span>
+                回复
+                <span style="font-weight: bold">{{ comment2.toUserName }}</span>
+                <br />
+                <span style="font-size: 12px">{{ comment2.createTime }}</span>
+              </div>
+            </el-col>
+          </el-row>
+          <p>{{ comment2.content }}</p>
+          <el-row>
+            <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
+              <i class="icon-zan iconfont"></i>
+              <span class="likeText"> 0</span>
+            </el-col>
+            <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
+              <i
+                class="icon-xiaoxi2 iconfont"
+                @click="showReplayInput(index)"
+              ></i>
+            </el-col>
+          </el-row>
+          <el-collapse-transition>
+            <div v-show="replayInputShow[index]">
+              <comment-input
+                :to-user-id="comment2.fromUserId"
+                :type="3"
+                :belong="comment.id"
+                @commitComment="getComment"
+              ></comment-input>
+            </div>
+          </el-collapse-transition>
+        </div>
+      </el-col>
+    </el-row>
+  </div>
+  <el-divider class="comment-divider"></el-divider>
 </template>
 
 <script>
 import commentInput from "@/components/commentInput";
 export default {
+  emits: ["commitComment1"],
   name: "commentCard",
   components: { commentInput },
+  props: {
+    comment: Object,
+  },
   data() {
     return {
-      commentInputShow: [],
+      replayInputShow: [],
+      commentInputShow: false,
     };
   },
   mounted() {
-    for (let i = 0; i < 5; i++) {
-      this.commentInputShow[i] = false;
+    for (let i = 0; i < this.comment.replay2replay.length; i++) {
+      this.replayInputShow[i] = false;
     }
     // console.log(this.commentInputShow);
   },
   methods: {
-    showCommentInput(index) {
-      this.commentInputShow[index] = !this.commentInputShow[index];
+    showReplayInput(index) {
+      this.replayInputShow[index] = !this.replayInputShow[index];
+    },
+    getComment() {
+      const _this = this;
+      this.commentInputShow = false;
+      for (let i = 0; i < this.comment.replay2replay.length; i++) {
+        this.replayInputShow[i] = false;
+      }
+      setTimeout(function () {
+        _this.$emit("commitComment1");
+      }, 1000);
     },
   },
 };

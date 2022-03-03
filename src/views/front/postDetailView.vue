@@ -58,8 +58,19 @@
                 5 收藏
               </el-col>
             </el-row>
-            <comment-input style="margin-bottom: 40px"></comment-input>
-            <commentCard></commentCard>
+            <comment-input
+              :to-user-id="0"
+              :type="1"
+              :belong="Number(this.$route.params.id)"
+              @commitComment="getComment"
+              style="margin-bottom: 40px"
+            ></comment-input>
+            <commentCard
+              v-for="comment in commentList"
+              v-bind:key="comment.id"
+              :comment="comment"
+              @commitComment1="getComment"
+            ></commentCard>
           </el-card>
         </el-col>
         <el-col :xs="24" :sm="18" :md="18" :lg="18" :xl="6"
@@ -89,6 +100,7 @@ import { findById, selectPostVo } from "@/api/post/post";
 import { removeVote } from "@/tools/removeImg";
 import { findByIds } from "@/api/post/vote";
 import dayjs from "dayjs";
+import { getComment } from "@/api/comment/comment";
 
 export default {
   name: "postDetailView",
@@ -112,12 +124,13 @@ export default {
       postData: {},
       voteList: [],
       post: {
-        id: 0,
+        id: 3,
       },
       community: {
         id: 0,
         status: 1,
       },
+      commentList: [],
     };
   },
   methods: {
@@ -133,7 +146,7 @@ export default {
           );
           _this.positionData[1].name = _this.postData.community;
           findById(_this.post.id).then(function (resp) {
-            console.log(resp);
+            //console.log(resp);
             _this.positionData[1].path =
               "/myCommunity/" + resp.community + "&" + _this.postData.community;
           });
@@ -154,11 +167,31 @@ export default {
         }
       });
     },
+    getComment() {
+      const _this = this;
+      getComment(_this.post.id).then(function (resp) {
+        for (let i = 0; i < resp.length; i++) {
+          // 格式化日期
+          resp[i].createTime = dayjs(resp[i].createTime).format(
+            "YYYY-MM-DD HH:mm:ss"
+          );
+          for (let j = 0; j < resp[i].replay2replay.length; j++) {
+            // 格式化日期
+            resp[i].replay2replay[j].createTime = dayjs(
+              resp[i].replay2replay[j].createTime
+            ).format("YYYY-MM-DD HH:mm:ss");
+          }
+        }
+        _this.commentList = resp;
+        //console.log(resp);
+      });
+    },
   },
   mounted() {
     const _this = this;
-    _this.post.id = _this.$route.params.id;
+    _this.post.id = Number(_this.$route.params.id);
     this.getPostData();
+    this.getComment();
   },
 };
 </script>

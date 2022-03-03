@@ -1,10 +1,10 @@
 <template>
-  <el-form>
+  <el-form :model="comment">
     <el-form-item>
       <el-input
         class="comment-input"
         style="background: #424c50"
-        v-model="commentArea"
+        v-model="comment.content"
         :autosize="{ minRows: 8, maxRows: 16 }"
         type="textarea"
         placeholder="留下你的想法。。。"
@@ -12,18 +12,54 @@
       </el-input>
     </el-form-item>
     <el-form-item>
-      <el-button class="comment-post">提交</el-button>
+      <el-button class="comment-post" @click="commit()">发送</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import VueCookies from "vue-cookies";
+import { sendComment } from "@/api/comment/comment";
+import { ElMessage } from "element-plus";
+
 export default {
+  emits: ["commitComment"],
   name: "commentInput",
+  props: {
+    toUserId: Number,
+    type: Number,
+    belong: Number,
+  },
   data() {
     return {
-      commentArea: "",
+      comment: {
+        fromUserId: 0,
+        toUserId: this.toUserId,
+        replayType: this.type,
+        belong: this.belong,
+        content: "",
+      },
     };
+  },
+  methods: {
+    commit() {
+      const _this = this;
+      console.log(_this.comment);
+      sendComment(_this.comment).then(function (resp) {
+        if (resp === true) {
+          ElMessage({
+            message: "评论成功",
+            type: "success",
+          });
+          _this.comment.content = "";
+          _this.$emit("commitComment");
+        }
+      });
+    },
+  },
+  mounted() {
+    const _this = this;
+    _this.comment.fromUserId = VueCookies.get("loginUserId");
   },
 };
 </script>
