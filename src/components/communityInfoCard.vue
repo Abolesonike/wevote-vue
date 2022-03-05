@@ -10,8 +10,8 @@
     </div>
     <p style="margin: 0; font-size: small; text-align: center">
       <i class="icon-yonghu iconfont"></i>社长:{{ community.owner }}
-      <i class="icon-taolun iconfont"></i>帖子:1000
-      <i class="icon-tuandui iconfont"></i>成员:200
+      <i class="icon-taolun iconfont"></i>帖子:{{ community.postNum }}
+      <i class="icon-tuandui iconfont"></i>成员:{{ community.userNum }}
     </p>
     <div style="height: 100px">
       <p style="margin: 0; font-size: small">
@@ -29,7 +29,7 @@
 
 <script>
 import { select, selectCommAdmin } from "@/api/community/community";
-import { findUserById, getLoginUserId } from "@/api/user/user";
+import { getLoginUserId, selectUser } from "@/api/user/user";
 
 export default {
   name: "communityInfoCard",
@@ -37,6 +37,10 @@ export default {
     return {
       community: {
         id: 0,
+        owner: 0,
+      },
+      sysUser: {
+        userId: 0,
       },
       isJoined: false,
     };
@@ -48,9 +52,10 @@ export default {
     selectCommunity() {
       const _this = this;
       select(1, 1, _this.community).then(function (resp) {
-        _this.community = resp[0];
-        findUserById(_this.community.owner).then(function (resp) {
-          _this.community.owner = resp.username;
+        _this.community = resp.list[0];
+        _this.sysUser.userId = _this.community.owner;
+        selectUser(1, 1, _this.sysUser).then(function (resp) {
+          _this.community.owner = resp.list[0].username;
         });
       });
     },

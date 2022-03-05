@@ -9,8 +9,8 @@
       <h4 style="margin: 0; color: #9d2933">{{ data.name }}</h4>
     </div>
     <p style="text-align: center; margin: 0; font-size: small">
-      <i class="icon-taolun iconfont"></i>帖子:1000
-      <i class="icon-tuandui iconfont"></i>成员:200
+      <i class="icon-taolun iconfont"></i>帖子:{{ data.postNum }}
+      <i class="icon-tuandui iconfont"></i>成员:{{ data.userNum }}
     </p>
     <div style="height: 100px">
       <p style="margin: 0; font-size: small">
@@ -55,7 +55,9 @@ export default {
       this.$router.push("/myCommunity/" + this.data.id + "&" + this.data.name);
     },
     gotoCommManage() {
-      this.$router.push("/communityManage/生活区");
+      this.$router.push(
+        "/communityManage/" + this.data.id + "&" + this.data.name
+      );
     },
   },
 };

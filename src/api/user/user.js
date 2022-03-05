@@ -1,20 +1,15 @@
 import req from "../axios";
 
+
 // 分页查询所有
-export const userListEnable = function (pageNum, pageSize, enable) {
-  return req("get", "/auth-service/sysUser/userList", {
-    pageNum: pageNum,
-    pageSize: pageSize,
-    enable: enable,
-  });
+export const selectUser = function (pageNum, pageSize, sysUser) {
+  return req(
+    "post",
+    "/auth-service/sysUser/select?pageNum=" + pageNum + "&pageSize=" + pageSize,
+    sysUser
+  );
 };
 
-// 根据id查找一个用户
-export const findUserById = function (id) {
-  return req("get", "/auth-service/sysUser/findById", {
-    id: id,
-  });
-};
 
 // 禁用启用一个用户
 export const changeEnable = function (id, enable) {

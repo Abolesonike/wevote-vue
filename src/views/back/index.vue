@@ -68,7 +68,7 @@
             <router-link to="/back/userTable/1">
               <el-menu-item index="2-1"> 用户管理 </el-menu-item>
             </router-link>
-            <router-link to="/back/userTable/0">
+            <router-link to="/back/userTable/2">
               <el-menu-item index="2-2"> 禁用用户 </el-menu-item>
             </router-link>
           </el-sub-menu>
