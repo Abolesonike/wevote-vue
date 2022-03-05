@@ -9,8 +9,8 @@
       <h4 style="margin: 0; color: #9d2933">{{ community.name }}</h4>
     </div>
     <p style="margin: 0; font-size: small; text-align: center">
-      <i class="icon-yonghu iconfont"></i>社长:{{ community.owner }}
-      <i class="icon-taolun iconfont"></i>帖子:{{ community.postNum }}
+      <i class="icon-yonghu iconfont"></i>社长:{{ community.owner }} &nbsp;
+      <i class="icon-taolun iconfont"></i>帖子:{{ community.postNum }} &nbsp;
       <i class="icon-tuandui iconfont"></i>成员:{{ community.userNum }}
     </p>
     <div style="height: 100px">
@@ -22,14 +22,41 @@
       <el-button v-if="isJoined === true" type="primary" @click="createPost"
         >交流发帖</el-button
       >
-      <el-button v-if="isJoined === false" type="primary">加入社区</el-button>
+      <el-button
+        v-if="isJoined === false"
+        @click="applyFormVisible = true"
+        type="primary"
+        >加入社区</el-button
+      >
     </div>
   </el-card>
+
+  <el-dialog v-model="applyFormVisible" title="社区申请">
+    <el-form :model="communityApply" label-position="top">
+      <el-form-item label="申请理由">
+        <el-input
+          :rows="5"
+          type="textarea"
+          placeholder="请输入申请理由。。。"
+          v-model="communityApply.applyReason"
+          autocomplete="off"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="applyFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="applyConfirm()">提交申请</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
-import { select, selectCommAdmin } from "@/api/community/community";
+import { checkIsJoined, select } from "@/api/community/community";
 import { getLoginUserId, selectUser } from "@/api/user/user";
+import { insertCommApply } from "@/api/community/communityApply";
+import { ElMessage } from "element-plus";
 
 export default {
   name: "communityInfoCard",
@@ -42,7 +69,13 @@ export default {
       sysUser: {
         userId: 0,
       },
+      communityApply: {
+        applyUserId: 0,
+        applyCommunity: 0,
+        applyReason: "",
+      },
       isJoined: false,
+      applyFormVisible: false,
     };
   },
   methods: {
@@ -59,20 +92,28 @@ export default {
         });
       });
     },
+    applyConfirm() {
+      const _this = this;
+      _this.communityApply.applyCommunity = _this.community.id;
+      insertCommApply(_this.communityApply).then(function (resp) {
+        if (resp.code === 200) {
+          _this.applyFormVisible = false;
+          ElMessage.success(resp.message);
+        } else {
+          _this.applyFormVisible = false;
+          ElMessage.error(resp.message);
+        }
+      });
+    },
   },
   mounted() {
     const _this = this;
     _this.community.id = Number(this.$route.path.split("&")[0].split("/")[2]);
     _this.selectCommunity();
     getLoginUserId().then(function (resp) {
-      const userId = resp;
-      selectCommAdmin(_this.community.id).then(function (resp) {
-        for (let i = 0; i < resp.length; i++) {
-          if (resp[i].userId === userId) {
-            _this.isJoined = true;
-            break;
-          }
-        }
+      _this.communityApply.applyUserId = resp;
+      checkIsJoined(_this.community.id, resp).then(function (resp1) {
+        _this.isJoined = resp1;
       });
     });
   },

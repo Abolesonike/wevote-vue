@@ -13,10 +13,17 @@ export const selectUserJoinedComm = function (userId) {
 };
 
 // 查询社区的所有用户
-export const selectCommAdmin = function (communityId) {
-  return req("get", "/post-service/community/selectCommAdmin", {
-    communityId: communityId,
-  });
+export const selectCommAdmin = function (pageNum, pageSize, communityId, user) {
+  return req(
+    "post",
+    "/post-service/community/selectCommAdmin?pageNum=" +
+      pageNum +
+      "&pageSize=" +
+      pageSize +
+      "&communityId=" +
+      communityId,
+    user
+  );
 };
 
 // // 条件查询社区
@@ -41,9 +48,17 @@ export const update = function (community) {
   return req("put", "/post-service/community/update", community);
 };
 
-// 条件查询社区
+// 删除
 export const deleteOne = function (communityId) {
   return req("delete", "/post-service/community/delete", {
     id: communityId,
+  });
+};
+
+// 检查用户是否加入社区
+export const checkIsJoined = function (communityId, userId) {
+  return req("get", "/post-service/community/checkIsJoined", {
+    communityId: communityId,
+    userId: userId,
   });
 };
