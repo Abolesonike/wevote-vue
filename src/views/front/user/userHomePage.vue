@@ -16,15 +16,7 @@
                 <my-info></my-info>
               </el-tab-pane>
               <el-tab-pane label="我的消息" name="myMessage"
-                ><my-message v-for="count in 6" v-bind:key="count"></my-message
-                ><el-pagination
-                  :pager-count="5"
-                  background
-                  layout="prev, pager, next"
-                  :total="1000"
-                  style="margin-bottom: 10px"
-                >
-                </el-pagination
+                ><my-message></my-message
               ></el-tab-pane>
               <el-tab-pane label="我的收藏" name="myCollection">
                 <!--                <my-collection></my-collection>-->
@@ -73,8 +65,9 @@ export default {
     };
   },
   methods: {
+    // eslint-disable-next-line no-unused-vars
     handleClick(tab, event) {
-      console.log(tab, event);
+      // console.log(tab, event);
     },
   },
 };

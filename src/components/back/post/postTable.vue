@@ -68,7 +68,7 @@
         <el-button
           type="success"
           v-if="status == 1"
-          @click="changeStatus(scope.row.id, 2)"
+          @click="changeStatus(scope.row.id, 2, '')"
           plain
           size="small"
           >通过</el-button
@@ -76,7 +76,7 @@
         <el-button
           type="warning"
           v-if="status == 1"
-          @click="changeStatus(scope.row.id, 3)"
+          @click="disagreePost(scope.row.id)"
           plain
           size="small"
           >不通过</el-button
@@ -84,7 +84,7 @@
         <el-button
           type="success"
           v-if="status == 2 || status == 3"
-          @click="changeStatus(scope.row.id, 1)"
+          @click="changeStatus(scope.row.id, 1, '')"
           plain
           size="small"
           >重新审核</el-button
@@ -92,7 +92,7 @@
         <el-button
           type="danger"
           v-if="status != 4"
-          @click="changeStatus(scope.row.id, 4)"
+          @click="tempDeletePost(scope.row.id)"
           plain
           size="small"
           >删除</el-button
@@ -100,7 +100,7 @@
         <el-button
           type="success"
           v-if="status == 4"
-          @click="changeStatus(scope.row.id, 1)"
+          @click="changeStatus(scope.row.id, 1, '')"
           plain
           size="small"
           >恢复</el-button
@@ -134,6 +134,52 @@
       <span class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false"
           >确定</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+  <!-- 删除理由 -->
+  <el-dialog v-model="deleteReasonVisible" title="删除理由" width="40%">
+    <el-form :model="reason">
+      <el-form-item>
+        <el-input
+          :autosize="{ minRows: 6, maxRows: 10 }"
+          type="textarea"
+          placeholder="请输入删除理由。。。"
+          v-model="reason.reason"
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="deleteReasonVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          @click="changeStatus(deletePostIdTemp, 4, reason.reason)"
+          >确认</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+  <!-- 不通过理由 -->
+  <el-dialog v-model="disagreeReasonVisible" title="不通过理由" width="40%">
+    <el-form :model="reason">
+      <el-form-item>
+        <el-input
+          :autosize="{ minRows: 6, maxRows: 10 }"
+          type="textarea"
+          placeholder="请输入不通过理由。。。"
+          v-model="reason.reason"
+        />
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="disagreeReasonVisible = false">取消</el-button>
+        <el-button
+          type="primary"
+          @click="changeStatus(deletePostIdTemp, 3, reason.reason)"
+          >确认</el-button
         >
       </span>
     </template>
@@ -195,6 +241,11 @@ export default {
       commPages: 10,
       dialogVisible: false,
       deleteDialogVisible: false,
+      deleteReasonVisible: false,
+      disagreeReasonVisible: false,
+      reason: {
+        reason: "",
+      },
       deletePostIdTemp: -1,
       rowData: {},
       status: 0,
@@ -270,8 +321,9 @@ export default {
       _this.dialogVisible = true; // 显示弹框
       // console.log(row);
     },
-    changeStatus(id, status) {
+    changeStatus(id, status, reason) {
       // 改变帖子状态
+      console.log(id, status, reason);
       const _this = this;
       const dic = {
         1: "重新审核",
@@ -279,7 +331,7 @@ export default {
         3: "审核未通过",
         4: "已删除",
       };
-      changeStatus(id, status).then(function (resp) {
+      changeStatus(id, status, reason).then(function (resp) {
         if (resp === true) {
           ElNotification({
             title: "操作成功",
@@ -288,6 +340,9 @@ export default {
             position: "bottom-right",
           });
           _this.loadData(_this.status);
+          _this.reason.reason = "";
+          _this.disagreeReasonVisible = false;
+          _this.deleteReasonVisible = false;
         }
       });
     },
@@ -311,6 +366,18 @@ export default {
       // 取得要彻底删除帖子的id，暂时存储
       const _this = this;
       _this.deleteDialogVisible = true;
+      _this.deletePostIdTemp = id;
+    },
+    tempDeletePost(id) {
+      // 取得要暂时删除帖子的id，暂时存储
+      const _this = this;
+      _this.deleteReasonVisible = true;
+      _this.deletePostIdTemp = id;
+    },
+    disagreePost(id) {
+      // 取得不通过帖子的id，暂时存储
+      const _this = this;
+      _this.disagreeReasonVisible = true;
       _this.deletePostIdTemp = id;
     },
     search() {

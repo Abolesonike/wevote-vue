@@ -53,7 +53,7 @@ import AsideMenu from "@/components/AsideMenu";
 import positionCard from "@/components/positionCard";
 import communityCard from "@/components/communityCard";
 import Footer from "@/components/Footer";
-import { select } from "@/api/community/community";
+import { managerCommunity } from "@/api/community/community";
 import { getLoginUserId } from "@/api/user/user";
 export default {
   name: "myCreatedCommunityView",
@@ -62,7 +62,7 @@ export default {
     return {
       positionData: [
         { name: "首页", path: "/" },
-        { name: "我创建的社区", path: "" },
+        { name: "我管理的社区", path: "" },
       ],
       community: {
         owner: 0,
@@ -79,21 +79,23 @@ export default {
     handleCurrentChange(currentPageNum) {
       // 翻页
       const _this = this;
-      select(currentPageNum, _this.pageInfo.pageSize, _this.community).then(
-        function (resp) {
-          _this.communityList = resp.list;
-        }
-      );
+      managerCommunity(
+        currentPageNum,
+        _this.pageInfo.pageSize,
+        _this.community.owner
+      ).then(function (resp) {
+        _this.communityList = resp.list;
+      });
     },
   },
   mounted() {
     const _this = this;
     getLoginUserId().then(function (resp) {
       _this.community.owner = resp;
-      select(
+      managerCommunity(
         _this.pageInfo.pageNum,
         _this.pageInfo.pageSize,
-        _this.community
+        resp
       ).then(function (resp) {
         _this.communityList = resp.list;
         _this.pages = resp.pages * 10;

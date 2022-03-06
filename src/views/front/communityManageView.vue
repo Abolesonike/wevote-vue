@@ -408,7 +408,7 @@ export default {
       },
       postPageInfo: {
         pageNum: 1,
-        pageSize: 6,
+        pageSize: 5,
         total: 0,
       },
       noticePageInfo: {

@@ -35,7 +35,7 @@
         <span> 我创建的社区</span>
       </template>
       <el-menu-item index="/createCommunity">创建社区</el-menu-item>
-      <el-menu-item index="/myCreatedCommunity">我创建社区</el-menu-item>
+      <el-menu-item index="/myCreatedCommunity">社区管理</el-menu-item>
       <!--      <el-menu-item index="/communityManage/生活区">生活区</el-menu-item>-->
     </el-sub-menu>
     <el-menu-item index="5">

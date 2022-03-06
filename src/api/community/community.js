@@ -26,6 +26,15 @@ export const selectCommAdmin = function (pageNum, pageSize, communityId, user) {
   );
 };
 
+// 查询社区的所有用户
+export const managerCommunity = function (pageNum, pageSize, userId) {
+  return req("get", "/post-service/community/managerCommunity", {
+    pageNum: pageNum,
+    pageSize: pageSize,
+    userId: userId,
+  });
+};
+
 // // 条件查询社区
 // export const select = function (community) {
 //   return req("post", "/post-service/community/select", community);

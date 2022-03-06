@@ -35,10 +35,11 @@ export const selectPostVo = function (pageNum, pageSize, post) {
 };
 
 // 改变指定帖子的状态
-export const changeStatus = function (id, status) {
+export const changeStatus = function (id, status, reason) {
   return req("get", "/post-service/post/changeStatus", {
     id: id,
     status: status,
+    reason: reason,
   });
 };
 
