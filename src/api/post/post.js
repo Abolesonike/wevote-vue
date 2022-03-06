@@ -22,32 +22,6 @@ export const findById = function (id) {
   });
 };
 
-// 查询所有帖子
-export const postList = function (pageNum, pageSize) {
-  return req("get", "/post-service/post/postList", {
-    pageNum: pageNum,
-    pageSize: pageSize,
-  });
-};
-
-// 查询指定状态所有帖子
-export const postListStatus = function (pageNum, pageSize, status) {
-  return req("get", "/post-service/post/postListStatus", {
-    pageNum: pageNum,
-    pageSize: pageSize,
-    status: status,
-  });
-};
-
-// 查询指定状态所有帖子
-export const postVoListStatus = function (pageNum, pageSize, status) {
-  return req("get", "/post-service/post/postVoListStatus", {
-    pageNum: pageNum,
-    pageSize: pageSize,
-    status: status,
-  });
-};
-
 // 条件查询帖子
 export const selectPostVo = function (pageNum, pageSize, post) {
   return req(

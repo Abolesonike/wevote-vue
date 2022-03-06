@@ -9,7 +9,7 @@
         <el-col :xs="0" :sm="0" :md="6" :lg="4" :xl="4"
           ><aside-menu style="margin: 10px"></aside-menu
         ></el-col>
-        <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="10">
+        <el-col :xs="24" :sm="24" :md="12" :lg="14" :xl="10">
           <position-card :msg="positionData"></position-card>
           <el-card class="postFilter"
             ><div>
@@ -37,7 +37,7 @@
           >
           </el-pagination>
         </el-col>
-        <el-col :xs="24" :sm="18" :md="18" :lg="18" :xl="5">
+        <el-col :xs="24" :sm="24" :md="6" :lg="6" :xl="5">
           <communityInfoCard></communityInfoCard
           ><community-notice-card></community-notice-card
         ></el-col>
@@ -84,6 +84,7 @@ import Footer from "@/components/Footer";
 import { selectPostVo } from "@/api/post/post";
 import dayjs from "dayjs";
 import { removeImg, removeVote } from "@/tools/removeImg";
+
 export default {
   name: "myCommunityView",
   components: {

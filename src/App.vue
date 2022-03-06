@@ -5,9 +5,14 @@
 </template>
 
 <style lang="stylus">
+#app{
+  height 100%
+
+}
 body{
   margin 0
   overflow-x hidden
+  height 100%
 }
   // 表格标题颜色
 .el-form-item__label{

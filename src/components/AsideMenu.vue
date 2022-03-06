@@ -6,6 +6,7 @@
     :default-active="decodeURI(this.$route.path)"
     text-color="#FFFFFF"
     router
+    style="height: 751px"
   >
     <el-menu-item index="/">
       <i class="icon-dingwei iconfont" style="font-size: large"></i>

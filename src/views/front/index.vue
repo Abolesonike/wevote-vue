@@ -9,7 +9,7 @@
         <el-col class="hidden-sm-and-down" :md="6" :lg="4" :xl="4"
           ><aside-menu style="margin: 10px"></aside-menu
         ></el-col>
-        <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="10">
+        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="10">
           <card
             v-for="postData in postDataList"
             v-bind:key="postData"
@@ -26,7 +26,7 @@
           >
           </el-pagination>
         </el-col>
-        <el-col :xs="24" :sm="24" :md="24" :lg="24" :xl="6"
+        <el-col :xs="24" :sm="24" :md="6" :lg="8" :xl="6"
           ><div>
             <HotPost></HotPost><community-recommend></community-recommend></div
         ></el-col>
