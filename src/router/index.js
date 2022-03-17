@@ -24,6 +24,7 @@ const communityCreateView = () => import("@/views/front/communityCreateView");
 const communityManageView = () => import("@/views/front/communityManageView");
 const userHomePage = () => import("@/views/front/user/userHomePage");
 const login = () => import("@/views/login/login");
+const findPassword = () => import("@/views/login/findPassword");
 const signIn = () => import("@/views/login/signIn");
 
 const postTable = () => import("../components/back/post/postTable");
@@ -96,6 +97,11 @@ const routes = [
     path: "/login",
     name: "Login",
     component: login,
+  },
+  {
+    path: "/findPassword",
+    name: "findPassword",
+    component: findPassword,
   },
   {
     path: "/signIn",

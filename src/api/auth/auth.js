@@ -6,7 +6,16 @@ export const login = function (data) {
   return req("post", "auth-service/login", qs.stringify(data));
 };
 
-// 发送登录数据
+
 export const signIn = function (sysUser, verifyCode) {
   return req("post", "auth-service/signIn?verifyCode=" + verifyCode, sysUser);
+};
+
+
+export const resetPassword = function (tel, password, verifyCode) {
+  return req("get", "auth-service/resetPassword", {
+    tel: tel,
+    password: password,
+    verifyCode: verifyCode,
+  });
 };

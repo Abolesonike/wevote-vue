@@ -21,12 +21,14 @@
         <i class="icon-shuqianshoucang iconfont" style="font-size: large"></i>
         <span> 我加入的社区</span>
       </template>
-      <el-menu-item
-        v-for="community in joinedCommunity"
-        v-bind:key="community.id"
-        :index="`/myCommunity/${community.id}&${community.name}`"
-        >{{ community.name }}</el-menu-item
-      >
+      <div v-if="joinedCommunity[0] !== null">
+        <el-menu-item
+          v-for="community in joinedCommunity"
+          v-bind:key="community.id"
+          :index="`/myCommunity/${community.id}&${community.name}`"
+          >{{ community.name }}</el-menu-item
+        >
+      </div>
       <!--      <el-menu-item index="/myCommunity/电影区">电影区</el-menu-item>-->
     </el-sub-menu>
     <el-sub-menu index="4">
@@ -64,7 +66,6 @@ export default {
       const _this = this;
       selectUserJoinedComm(userId).then(function (resp) {
         _this.joinedCommunity = resp;
-        //console.log(resp);
       });
     },
   },

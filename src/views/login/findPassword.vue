@@ -7,7 +7,7 @@
           <div
             style="filter: alpha(Opacity=80); -moz-opacity: 0.5; opacity: 0.7"
           >
-            <LoginForm></LoginForm></div
+            <findPasswordForm></findPasswordForm></div
         ></el-col>
         <el-col :xs="1" :sm="4" :md="6" :lg="6" :xl="9"></el-col>
       </el-row>
@@ -16,11 +16,11 @@
 </template>
 
 <script>
-import LoginForm from "@/components/login/LoginForm";
+import findPasswordForm from "@/components/login/findPasswordForm";
 
 export default {
-  name: "login",
-  components: { LoginForm },
+  name: "findPassword",
+  components: { findPasswordForm },
   data() {
     return {
       conTop: {
