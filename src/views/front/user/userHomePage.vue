@@ -18,14 +18,14 @@
               <el-tab-pane label="我的消息" name="myMessage"
                 ><my-message></my-message
               ></el-tab-pane>
-              <el-tab-pane label="我的收藏" name="myCollection">
-                <!--                <my-collection></my-collection>-->
-              </el-tab-pane>
               <el-tab-pane label="我的投票" name="myPost">
-                <!--                <myPost></myPost>-->
+                <myPost></myPost>
               </el-tab-pane>
-              <el-tab-pane label="我的评论" name="myComment"
-                >myComment</el-tab-pane
+              <el-tab-pane label="我的收藏" name="myCollection">
+                <my-collection></my-collection>
+              </el-tab-pane>
+              <el-tab-pane label="我的点赞" name="myComment"
+                ><my-like></my-like></el-tab-pane
               >
             </el-tabs>
           </el-card>
@@ -46,8 +46,9 @@ import Footer from "@/components/Footer";
 
 import myInfo from "@/views/front/user/myInfo";
 import myMessage from "@/views/front/user/myMessage";
-// import myPost from "@/views/front/user/myPost";
-// import myCollection from "@/views/front/user/myCollection";
+import myPost from "@/views/front/user/myPost";
+import myCollection from "@/views/front/user/myCollection";
+import myLike from "@/views/front/user/myLike";
 export default {
   name: "userHomePage",
   components: {
@@ -56,8 +57,9 @@ export default {
     Footer,
     myInfo,
     myMessage,
-    // myPost,
-    // myCollection,
+    myPost,
+    myCollection,
+    myLike,
   },
   data() {
     return {

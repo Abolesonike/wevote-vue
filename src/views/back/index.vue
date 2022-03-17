@@ -84,10 +84,24 @@
               <el-menu-item index="3-2"> 角色管理 </el-menu-item>
             </router-link>
           </el-sub-menu>
-          <el-menu-item index="4">
-            <el-icon><setting /></el-icon>
-            <span>评论管理</span>
-          </el-menu-item>
+          <el-sub-menu index="4">
+            <template #title>
+              <el-icon><setting /></el-icon>
+              <span>评论管理</span>
+            </template>
+            <router-link to="/back/commentTable/2">
+              <el-menu-item index="4-1"> 审核通过 </el-menu-item>
+            </router-link>
+            <router-link to="/back/commentTable/1">
+              <el-menu-item index="4-2"> 评论审核 </el-menu-item>
+            </router-link>
+            <router-link to="/back/commentTable/3">
+              <el-menu-item index="4-3"> 审核不通过 </el-menu-item>
+            </router-link>
+            <router-link to="/back/commentTable/4">
+              <el-menu-item index="4-4"> 举报处理 </el-menu-item>
+            </router-link>
+          </el-sub-menu>
         </el-menu>
       </el-aside>
       <el-container>

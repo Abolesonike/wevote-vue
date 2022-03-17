@@ -19,11 +19,15 @@ export const permsList = function (pageNum, pageSize) {
 };
 
 // 分页查询所有一级权限
-export const parentPermsList = function (pageNum, pageSize) {
-  return req("get", "/auth-service/sysPerms/parentPermsList", {
-    pageNum: pageNum,
-    pageSize: pageSize,
-  });
+export const parentPermsList = function (pageNum, pageSize, sysPerms) {
+  return req(
+    "post",
+    "/auth-service/sysPerms/parentPermsList?pageNum=" +
+      pageNum +
+      "&pageSize=" +
+      pageSize,
+    sysPerms
+  );
 };
 
 // 查询所有子权限

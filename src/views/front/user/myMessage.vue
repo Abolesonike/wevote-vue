@@ -8,7 +8,7 @@
       <span class="msgTitle"> {{ message.title }} </span>
       <span>&nbsp; {{ message.creationDate }} </span>
     </div>
-    <div style="color: floralwhite">{{ message.content }}</div>
+    <div style="color: floralwhite" v-html="message.content"></div>
   </el-card>
   <el-pagination
     background
@@ -45,7 +45,7 @@ export default {
       const _this = this;
       selectMessage(
         _this.pageInfo.pageNum,
-        _this.pageInfo.pagesSize,
+        _this.pageInfo.pageSize,
         _this.message
       ).then(function (resp) {
         for (let i = 0; i < resp.list.length; i++) {
@@ -56,7 +56,7 @@ export default {
         }
         _this.messageList = resp.list;
         _this.pageInfo.total = resp.total;
-        console.log(resp);
+        //console.log(resp);
       });
     },
     handleCurrentChange(currentPage) {

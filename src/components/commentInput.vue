@@ -29,6 +29,7 @@ export default {
     toUserId: Number,
     type: Number,
     belong: Number,
+    toComment: Number,
   },
   data() {
     return {
@@ -37,6 +38,7 @@ export default {
         toUserId: this.toUserId,
         replayType: this.type,
         belong: this.belong,
+        toComment: this.toComment,
         content: "",
       },
     };

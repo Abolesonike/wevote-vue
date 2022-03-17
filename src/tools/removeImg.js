@@ -19,13 +19,15 @@ export const removeImg = function (html) {
 };
 
 export const removeVote = function (html) {
-  // 去掉html中<img src="" />标签
   const contents = [];
   while (html.search(/contenteditable/) !== -1) {
     const indexStart = html.indexOf("contenteditable");
     const indexEnd = html.indexOf("</div>", indexStart);
     contents.push(html.slice(0, indexStart - 97)); // 前面的
     html = html.slice(indexEnd + 6); // 后面的
+    if (html.search(/contenteditable/) === -1) {
+      contents.push(html);
+    }
   }
   if (contents.length === 0) {
     contents.push(html);

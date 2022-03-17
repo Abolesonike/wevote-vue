@@ -41,7 +41,7 @@
       <el-button type="primary" icon="el-icon-search" @click="search()"
         >查询</el-button
       >
-      <el-button icon="el-icon-refresh-left" @click="community = {}"
+      <el-button icon="el-icon-refresh-left" @click="restCommunity()"
         >重置</el-button
       >
     </el-form-item>
@@ -140,7 +140,7 @@ export default {
         status: 0,
       },
       pageInfo: {
-        pageNum: 0,
+        pageNum: 1,
         pageSize: 10,
         pages: 10,
       },
@@ -240,11 +240,18 @@ export default {
       _this.pageInfo.pageNum = 1;
       _this.loadData();
     },
+    restCommunity() {
+      const _this = this;
+      _this.community.name = "";
+      _this.community.classification = "";
+      _this.community.creationDateStart = "";
+      _this.community.creationDateEnd = "";
+    },
   },
   mounted() {
     const _this = this;
     _this.status = this.$route.params.status;
-    _this.community.status = this.$route.params.status;
+    _this.community.status = Number( this.$route.params.status);
     this.loadData();
     selectCommClassification(_this.classification).then(function (resp) {
       _this.ClassificationList = resp;
@@ -255,7 +262,7 @@ export default {
       const _this = this;
       this.loading = true;
       _this.status = this.$route.params.status;
-      _this.community.status = this.$route.params.status;
+      _this.community.status = Number( this.$route.params.status);
       if (_this.status != null) {
         this.loadData();
       }

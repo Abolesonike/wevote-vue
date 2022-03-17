@@ -61,7 +61,6 @@
                     </el-date-picker>
                   </el-form-item>
                   <el-form-item size="small" prop="commJoinedTimeEnd">
-                    --
                     <el-date-picker
                       v-model="user.commJoinedTimeEnd"
                       type="date"
@@ -142,7 +141,6 @@
                     >
                     </el-date-picker>
                   </el-form-item>
-                  --
                   <el-form-item size="small" prop="applyTimeEnd">
                     <el-date-picker
                       v-model="communityApply.applyTimeEnd"
@@ -204,7 +202,7 @@
                 >
                 </el-pagination>
               </el-tab-pane>
-              <el-tab-pane label="发帖管理">
+              <el-tab-pane label="投票管理">
                 <el-form
                   ref="postForm"
                   :inline="true"
@@ -268,9 +266,25 @@
                     width="200"
                   />
                   <el-table-column label="操作">
-                    <el-button type="primary">详情</el-button>
-                    <el-button type="primary">删除</el-button>
-                    <el-button type="primary">精华</el-button>
+                    <template v-slot="scope">
+                      <el-button
+                        type="primary"
+                        @click="postDetail(scope.row.id)"
+                        >详情</el-button
+                      >
+                      <!-- <el-button type="primary">删除</el-button>-->
+                      <el-button
+                        v-if="scope.row.type === 0"
+                        type="primary"
+                        @click="changePostType(scope.row.id, 1)"
+                        >设置精华</el-button
+                      >
+                      <el-button
+                        v-if="scope.row.type === 1"
+                        @click="changePostType(scope.row.id, 0)"
+                        >取消精华</el-button
+                      >
+                    </template>
                   </el-table-column>
                 </el-table>
                 <br />
@@ -308,7 +322,7 @@
                     </el-input>
                   </el-form-item>
                   <el-form-item>
-                    <el-button @click="postNotice()">发布通知</el-button>
+                    <el-button @click="postNotice()">发布公告</el-button>
                   </el-form-item>
                 </el-form>
                 <el-table :data="noticeList" style="width: 100%">
@@ -340,7 +354,11 @@
                     width="180"
                   />
                   <el-table-column label="操作">
-                    <el-button type="primary">删除</el-button>
+                    <template v-slot="scope">
+                      <el-button type="danger" @click="deleteNotice(scope.row)"
+                        >删除</el-button
+                      >
+                    </template>
                   </el-table-column>
                 </el-table>
                 <br />
@@ -379,8 +397,9 @@ import {
   selectCommApply,
 } from "@/api/community/communityApply";
 import { ElMessage } from "element-plus";
-import { selectPostVo } from "@/api/post/post";
+import { changeType, selectPostVo } from "@/api/post/post";
 import {
+  deleteNotice,
   insertNotice,
   selectNotice,
   updateNotice,
@@ -472,7 +491,7 @@ export default {
   methods: {
     resetForm(formName) {
       const _this = this;
-      console.log(11);
+      //console.log(11);
       _this.$refs[formName].resetFields();
     },
     loadCommunityInfo() {
@@ -562,6 +581,7 @@ export default {
       selectPostVo(
         _this.postPageInfo.pageNum,
         _this.postPageInfo.pageSize,
+        0,
         _this.post
       ).then(function (resp) {
         for (let i = 0; i < resp.list.length; i++) {
@@ -578,6 +598,23 @@ export default {
       const _this = this;
       _this.postPageInfo.pageNum = currentPageNum;
       _this.loadCommunityPost();
+    },
+    postDetail(id) {
+      const _this = this;
+      _this.$router.push("/postDetail/" + id);
+    },
+    changePostType(id, type) {
+      const _this = this;
+      changeType(id, type).then(function (resp) {
+        if (resp === true) {
+          if (type === 1) {
+            ElMessage.success("加精成功！");
+          } else {
+            ElMessage.success("取消加精成功！");
+          }
+          _this.loadCommunityPost();
+        }
+      });
     },
     loadCommunityNotice() {
       const _this = this;
@@ -623,6 +660,16 @@ export default {
       updateNotice(row).then(function (resp) {
         if (resp === true) {
           ElMessage.success("修改成功！");
+          _this.loadCommunityNotice();
+        }
+      });
+    },
+    deleteNotice(row) {
+      const _this = this;
+      row.creationDate = dayjs(row.creationDate).format("YYYY-MM-DDTHH:mm:ss");
+      deleteNotice(row).then(function (resp) {
+        if (resp === true) {
+          ElMessage.success("删除成功！");
           _this.loadCommunityNotice();
         }
       });

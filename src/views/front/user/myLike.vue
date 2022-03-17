@@ -1,22 +1,6 @@
 <template>
   <div v-for="postData in postDataList" v-bind:key="postData">
     <Card style="background: #424c50" :postData="postData"></Card>
-    <div style="margin-left: 10px; margin-bottom: 20px">
-            <el-button type="primary" size="small" @click="updatePost(postData.id)">编辑</el-button>
-      <el-popconfirm
-        title="删除后无法恢复，确认操作吗？"
-        @confirm="deletePost(postData.id)"
-      >
-        <template #reference>
-          <el-button type="danger" size="small">删除</el-button>
-        </template>
-      </el-popconfirm>
-      <span>&emsp;状态：</span>
-      <span v-if="postData.status === 1">待审核</span>
-      <span v-if="postData.status === 2">审核通过</span>
-      <span v-if="postData.status === 3">审核未通过</span>
-      <span v-if="postData.status === 4">已被管理员删除</span>
-    </div>
   </div>
   <el-pagination
     background
@@ -30,11 +14,11 @@
 <script>
 import Card from "@/components/Card";
 import VueCookies from "vue-cookies";
-import { deletePost, myPost } from "@/api/post/post";
+import { myLike } from "@/api/post/post";
 import dayjs from "dayjs";
 import { removeImg, removeVote } from "@/tools/removeImg";
 export default {
-  name: "myPost",
+  name: "myLike",
   components: { Card },
   data() {
     return {
@@ -50,7 +34,7 @@ export default {
   methods: {
     loadData() {
       const _this = this;
-      myPost(
+      myLike(
         _this.pageInfo.pageNum,
         _this.pageInfo.pageSize,
         _this.userId
@@ -78,18 +62,6 @@ export default {
       const _this = this;
       _this.pageInfo.pageNum = currentPageNum;
       _this.loadData();
-    },
-    deletePost(id) {
-      const _this = this;
-      deletePost(id).then(function (resp) {
-        if (resp === true) {
-          _this.loadData();
-        }
-      });
-    },
-    updatePost(id) {
-      const _this = this;
-      _this.$router.push("/postUpdate/" + id);
     },
   },
   mounted() {

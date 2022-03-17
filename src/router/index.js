@@ -12,8 +12,10 @@ import { createRouter, createWebHistory } from "vue-router";
 // import login from "@/views/login/login";
 
 const Index = () => import("../views/front/index");
+const searchView = () => import("../views/front/searchView");
 const postDetailView = () => import("@/views/front/postDetailView");
 const postCreateView = () => import("@/views/front/postCreateView");
+const postUpdateView = () => import("@/views/front/postUpdateView")
 const communityView = () => import("@/views/front/communityView");
 const myCommunityView = () => import("@/views/front/myCommunityView");
 const myCreatedCommunityView = () =>
@@ -28,15 +30,22 @@ const postTable = () => import("../components/back/post/postTable");
 const userTable = () => import("../components/back/sysUser/userTable");
 const communityTable = () =>
   import("../components/back/community/communityTable");
-const classification = () => import("../components/back/community/classification");
+const classification = () =>
+  import("../components/back/community/classification");
 const permsTable = () => import("../components/back/sysPerms/permsTable");
 const roleTable = () => import("../components/back/sysRole/roleTable");
+const commentTable = () => import("../components/back/comment/commentTable");
 const IndexB = () => import("../views/back/index");
 const routes = [
   {
     path: "/",
     name: "index",
     component: Index,
+  },
+  {
+    path: "/search/:keyword",
+    name: "searchView",
+    component: searchView,
   },
   {
     path: "/postDetail/:id",
@@ -47,6 +56,11 @@ const routes = [
     path: "/postCreate",
     name: "postCreateView",
     component: postCreateView,
+  },
+  {
+    path: "/postUpdate/:id",
+    name: "postUpdateView",
+    component: postUpdateView,
   },
   {
     path: "/community",
@@ -116,6 +130,10 @@ const routes = [
       {
         path: "roleTable",
         component: roleTable,
+      },
+      {
+        path: "commentTable/:status",
+        component: commentTable,
       },
     ],
   },

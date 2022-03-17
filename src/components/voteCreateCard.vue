@@ -4,17 +4,22 @@
       <el-form-item label="标题" prop="title" style="margin-bottom: 20px">
         <el-input v-model="form.title"></el-input>
       </el-form-item>
-      <el-form-item label="结束时间" prop="endTime" style="margin-bottom: 20px">
-        <el-radio-group v-model="form.endTime">
-          <el-radio-button label="一天"></el-radio-button>
-          <el-radio-button label="一周"></el-radio-button>
-          <el-radio-button label="从不"></el-radio-button>
-        </el-radio-group>
+      <el-form-item
+        label="结束时间"
+        prop="endDate"
+        style="margin-bottom: 20px"
+      >
+        <!--        <el-radio-group v-model="form.endTime">-->
+        <!--          <el-radio-button label="一天"></el-radio-button>-->
+        <!--          <el-radio-button label="一周"></el-radio-button>-->
+        <!--          <el-radio-button label="从不"></el-radio-button>-->
+        <!--        </el-radio-group>-->
         <el-date-picker
+          :disabled-date="disabledDate"
           style="margin-top: 10px"
-          v-model="form.endTime"
+          v-model="form.endDate"
           type="date"
-          placeholder="自定义"
+          placeholder="结束时间"
           value-format="YYYY-MM-DD"
         >
         </el-date-picker>
@@ -42,9 +47,9 @@
           >+</el-button
         >
       </el-form-item>
-      <el-form-item label="正确答案">
-        <el-checkbox label="设置正确答案"></el-checkbox>
-      </el-form-item>
+      <!--      <el-form-item label="正确答案">-->
+      <!--        <el-checkbox label="设置正确答案"></el-checkbox>-->
+      <!--      </el-form-item>-->
       <el-form-item label="多选">
         <el-select v-model="form.multiChoose" placeholder="多选数量">
           <el-option
@@ -71,6 +76,7 @@ export default {
         chooses: [],
         multiChoose: [{ value: "Option1", label: "Option1" }],
         inputValue: "",
+        endDate: "",
       },
       rules: {
         title: [
@@ -80,7 +86,7 @@ export default {
             trigger: "blur",
           },
         ],
-        endTime: [
+        endDate: [
           {
             required: true,
             message: "请输入结束时间！",
@@ -118,6 +124,11 @@ export default {
       }
       this.inputVisible = false;
       this.form.inputValue = "";
+    },
+    disabledDate(time) {
+      return time.getTime() < Date.now(); //今天之后禁用
+      // return time.getTime() < Date.now() - 3600 * 1000 * 24; //今天之前禁用，减去一天的毫秒数，否则今天也将禁用
+      //Date.now()返回1970/01/01以来的毫秒数
     },
   },
 };

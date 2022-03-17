@@ -25,8 +25,8 @@
                   <span class="post_username">{{ postData.postUserName }}</span>
                   <span>{{ postData.createTime }}/</span>
                   <span>社区:{{ postData.community }}/</span>
-                  <span>点赞:2/</span>
-                  <span>评论:30</span>
+                  <span>点赞:{{ postLike.number }}/</span>
+                  <span>评论:{{postData.commentNum}}</span>
                 </div>
                 <div>
                   <h3 class="post_title">{{ postData.title }}</h3>
@@ -46,16 +46,38 @@
             </div>
             <el-row style="margin: 15px 0 15px 0">
               <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="3">
-                <i class="icon-zan iconfont"></i>
-                2 赞！
+                <a @click="like()"
+                  ><i
+                    style="font-size: 20px"
+                    v-if="postLike.isOperated === false"
+                    class="icon-good iconfont"
+                  ></i>
+                  <i
+                    style="font-size: 20px"
+                    v-if="postLike.isOperated === true"
+                    class="icon-good-fill iconfont"
+                  ></i
+                ></a>
+                {{ postLike.number }} 赞
               </el-col>
-              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="3">
-                <i class="icon-fenxiang iconfont"></i>
-                4 分享
+              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="4">
+                <a @click="collection()">
+                  <i
+                    style="font-size: 20px"
+                    v-if="postCollection.isOperated === false"
+                    class="icon-favorites iconfont"
+                  ></i>
+                  <i
+                    style="font-size: 20px"
+                    v-if="postCollection.isOperated === true"
+                    class="icon-favorites-fill iconfont"
+                  ></i>
+                </a>
+                {{ postCollection.number }} 收藏
               </el-col>
-              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="3">
-                <i class="icon-shoucang iconfont"></i>
-                5 收藏
+              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="4">
+                <i class="icon-xiaoxi2 iconfont"></i>
+                {{ postData.commentNum }} 评论
               </el-col>
             </el-row>
             <comment-input
@@ -96,11 +118,12 @@ import commentInput from "@/components/commentInput";
 import commentCard from "@/components/commentCard";
 import voteCard from "@/components/voteCard";
 
-import { findById, selectPostVo } from "@/api/post/post";
+import { collection, findById, like, selectPostVo } from "@/api/post/post";
 import { removeVote } from "@/tools/removeImg";
 import { findByIds } from "@/api/post/vote";
 import dayjs from "dayjs";
 import { getComment } from "@/api/comment/comment";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "postDetailView",
@@ -131,12 +154,20 @@ export default {
         status: 1,
       },
       commentList: [],
+      postLike: {
+        number: 0,
+        isOperated: false,
+      },
+      postCollection: {
+        number: 0,
+        isOperated: false,
+      },
     };
   },
   methods: {
     async getPostData() {
       const _this = this;
-      await selectPostVo(1, 10, _this.post).then(function (resp) {
+      await selectPostVo(1, 10, 0, _this.post).then(function (resp) {
         if (resp !== null) {
           //console.log(resp);
           _this.postData = resp.list[0];
@@ -162,7 +193,10 @@ export default {
       const _this = this;
       findByIds(ids).then(function (resp) {
         if (resp !== null) {
-          //console.log(resp);
+          console.log(resp);
+          for (let i = 0; i < resp.length; i++) {
+            resp[i].endDateFormat = dayjs(resp[i].endDate).format("YYYY-MM-DD");
+          }
           _this.voteList = resp;
         }
       });
@@ -186,12 +220,53 @@ export default {
         //console.log(resp);
       });
     },
+    like() {
+      const _this = this;
+      like(_this.post.id, VueCookies.get("loginUserId"), 1).then(function (
+        resp
+      ) {
+        _this.postLike.number = resp.number;
+        _this.postLike.isOperated = resp.isOperated;
+      });
+    },
+    collection() {
+      const _this = this;
+      collection(_this.post.id, VueCookies.get("loginUserId"), 1).then(
+        function (resp) {
+          _this.postCollection.number = resp.number;
+          _this.postCollection.isOperated = resp.isOperated;
+        }
+      );
+    },
+    loadData() {
+      const _this = this;
+      _this.post.id = Number(_this.$route.params.id);
+      like(this.post.id, VueCookies.get("loginUserId"), 0).then(function (
+        resp
+      ) {
+        _this.postLike.number = resp.number;
+        _this.postLike.isOperated = resp.isOperated;
+      });
+      collection(this.post.id, VueCookies.get("loginUserId"), 0).then(function (
+        resp
+      ) {
+        _this.postCollection.number = resp.number;
+        _this.postCollection.isOperated = resp.isOperated;
+      });
+      this.getPostData();
+      this.getComment();
+    },
   },
   mounted() {
-    const _this = this;
-    _this.post.id = Number(_this.$route.params.id);
-    this.getPostData();
-    this.getComment();
+    this.loadData();
+  },
+  watch: {
+    $route() {
+      //监听相同路由下参数变化的时候，从而实现异步刷新
+      this.loading = true;
+      //重新获取数据
+      location.reload();
+    },
   },
 };
 </script>

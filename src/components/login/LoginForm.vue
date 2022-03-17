@@ -14,7 +14,7 @@
         <el-input v-model="form.password"></el-input>
       </el-form-item>
       <el-form-item label="验证码">
-        <el-input v-model="form.code"></el-input>
+        <el-input v-model="form.verifyCode"></el-input>
       </el-form-item>
 
       <el-form-item>
@@ -48,7 +48,7 @@ export default {
       form: {
         username: "",
         password: "",
-        code: "",
+        verifyCode: "",
       },
       verCode: "",
     };
@@ -70,12 +70,8 @@ export default {
           VueCookies.set("loginUserId", resp.data.userId, "1D");
           //_this.$store.commit("setLoginUserId", resp.data.userId);
           _this.$router.push("/");
-        } else if (resp.data === "用户不存在！") {
-          ElMessage.error("用户不存在！");
-        } else if (resp.data === "密码错误！") {
-          ElMessage.error("密码错误！");
         } else {
-          ElMessage.error("验证码错误！");
+          ElMessage.error(resp.data);
         }
       });
     },
@@ -86,7 +82,7 @@ export default {
     getVerCode() {
       const _this = this;
       axios
-        .get("http://localhost/user-service/vercode", {
+        .get("http://localhost/auth-service/verifyCode", {
           //和headers   params timeout等属性同级
           responseType: "arraybuffer",
         })

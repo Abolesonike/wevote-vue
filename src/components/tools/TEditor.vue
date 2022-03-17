@@ -238,7 +238,7 @@ export default {
             `<div contentEditable="false" style="background: #424c50;color: #fff;padding: 10px;margin: 10px;border-radius:10px">
                     <h3>投票</h3>
                     <p>${voteFormData.title}</p>
-                    <p>结束时间：${voteFormData.endTime}</p>
+                    <p>结束时间：${voteFormData.endDate}</p>
                     <p>选项：${voteFormData.chooses}</p>
                 </div><br/>`
           );

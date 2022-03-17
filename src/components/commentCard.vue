@@ -88,6 +88,7 @@
                 :to-user-id="comment2.fromUserId"
                 :type="3"
                 :belong="comment.id"
+                :to-comment="comment2.id"
                 @commitComment="getComment"
               ></comment-input>
             </div>

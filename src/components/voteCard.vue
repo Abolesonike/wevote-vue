@@ -5,7 +5,7 @@
     >
     <br />
     <p style="color: #d1d9e0">
-      {{ participation }}人参与·距离结束还要3天14小时24分
+      {{ participation }}人参与●结束时间：{{ voteData.endDateFormat }}
     </p>
     <div v-for="(choose, index) in separateChooses" v-bind:key="choose">
       <el-checkbox
@@ -32,11 +32,17 @@
     <el-button
       @click="voteForThisVote()"
       class="vote-post"
-      v-if="isVoted === false"
+      v-if="isVoted === false && isEnd === false"
       >投票</el-button
     >
-    <el-button class="vote-post" v-if="isVoted === true" disabled
+    <el-button
+      class="vote-post"
+      v-if="isVoted === true && isEnd === false"
+      disabled
       >已投票
+    </el-button>
+    <el-button class="vote-post" v-if="isEnd === true" disabled
+      >已结束
     </el-button>
   </div>
 </template>
@@ -60,6 +66,7 @@ export default {
       currentSelectNumber: 0,
       checkboxSelectAble: [],
       checkboxStatus: [],
+      isEnd: false,
     };
   },
   mounted() {
@@ -83,6 +90,12 @@ export default {
     for (let i = 0; i < chooses.length; i++) {
       this.checkboxSelectAble.push(false);
       this.checkboxStatus.push(false);
+    }
+    console.log(typeof this.voteData.endDate);
+    let d = new Date(this.voteData.endDate);
+    if (Date.now() > d.getTime()) {
+      this.isEnd = true;
+      this.isVoted = true;
     }
   },
   methods: {
@@ -182,8 +195,8 @@ export default {
           }
         }
       }
-      console.log(this.voteData.voteNumber);
-      console.log(this.currentSelectNumber);
+      //console.log(this.voteData.voteNumber);
+      //console.log(this.currentSelectNumber);
     },
   },
   computed: {
@@ -204,7 +217,7 @@ export default {
     percentage() {
       // 计算投票比例
       return (index) => {
-        if (this.voteData.voteUser === null) {
+        if (this.voteData.voteUser === null || this.voteData.voteUser === "") {
           return 0;
         } else {
           return Math.round(
@@ -235,7 +248,7 @@ export default {
   color: #d1d9e0;
 }
 
->>>.vote-divider {
+>>> .vote-divider {
   margin: 5px 0;
 }
 

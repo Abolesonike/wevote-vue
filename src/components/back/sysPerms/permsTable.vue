@@ -1,18 +1,38 @@
 <template>
   <h2>权限列表</h2>
+  <el-form :inline="true" :model="sysPerms" class="demo-form-inline">
+    <el-form-item label="路径" size="small">
+      <el-input placeholder="路径" v-model="sysPerms.path"></el-input>
+    </el-form-item>
+    <el-form-item label="描述" size="small">
+      <el-input placeholder="描述" v-model="sysPerms.menuName"></el-input>
+    </el-form-item>
+
+    <el-form-item label="创建时间" size="small">
+      <el-date-picker type="date" placeholder="选择日期" v-model="sysPerms.createTimeStart"> </el-date-picker>
+      到
+      <el-date-picker type="date" placeholder="选择日期" v-model="sysPerms.createTimeEnd"> </el-date-picker>
+    </el-form-item>
+    <el-form-item size="small">
+      <el-button type="primary" icon="el-icon-search" @click="search()"
+        >查询</el-button
+      >
+      <el-button icon="el-icon-refresh-left" @click="restForm()"
+        >重置</el-button
+      >
+    </el-form-item>
+  </el-form>
   <el-table
     :data="tableData"
     class="permsTable"
-    height="620"
-    :border="true"
     lazy
     :load="load"
     :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
     row-key="permsId"
   >
-    <el-table-column prop="permsId" label="id" width="240" />
-    <el-table-column prop="menuName" label="描述" width="400" />
+    <el-table-column prop="permsId" label="编号" width="120" />
     <el-table-column prop="path" label="路径" width="300" />
+    <el-table-column prop="menuName" label="描述" width="400" />
     <el-table-column prop="createTime" label="创建时间" width="300" />
     <el-table-column label="操作">
       <template v-slot="scope">
@@ -36,16 +56,19 @@
     </el-table-column>
   </el-table>
   <el-row :gutter="20" style="margin-top: 10px">
-    <el-col :span="12" :offset="0"
+    <el-col :span="7" :offset="0"
       ><el-pagination
         background
-        layout="prev, pager, next"
-        :total="pages"
+        :total="pageInfo.total"
         @current-change="handleCurrentChange"
+        layout="total, sizes, prev, pager, next, jumper"
+        v-model:page-size="pageInfo.pageSize"
+        @size-change="handleSizeChange"
+        :page-sizes="[5, 10, 20, 50, 100]"
       >
       </el-pagination
     ></el-col>
-    <el-col :span="2" :offset="9">
+    <el-col :span="2" :offset="0">
       <el-button type="primary" @click="showAddPermsForm(null)"
         >添加父级权限</el-button
       ></el-col
@@ -121,12 +144,18 @@ export default {
       }
     };
     return {
+      sysPerms: {
+        menuName: "",
+        path: "",
+        createTimeStart: "",
+        createTimeEnd: "",
+      },
       pageInfo: {
         pageNum: 1,
         pageSize: 10,
         currentPageNum: 1,
+        total: 0,
       },
-      pages: 10,
       tableData: [], // 表格数据
       dateRange: dateRange,
       dialogFormVisible: false, // 新加权限弹窗是否可见
@@ -152,26 +181,12 @@ export default {
   methods: {
     loadData() {
       const _this = this;
-      parentPermsList(this.pageInfo.pageNum, this.pageInfo.pageSize).then(
-        function (resp) {
-          // console.log(resp);
-          for (let i = 0; i < resp.list.length; i++) {
-            // 格式化日期
-            resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
-              "YYYY-MM-DD HH:mm:ss"
-            );
-          }
-          _this.tableData = resp.list;
-          _this.pages = resp.pages * 10;
-        }
-      );
-    },
-    handleCurrentChange(currentPageNum) {
-      // 翻页
-      const _this = this;
-      parentPermsList(currentPageNum, this.pageInfo.pageSize).then(function (
-        resp
-      ) {
+      parentPermsList(
+        this.pageInfo.pageNum,
+        this.pageInfo.pageSize,
+        this.sysPerms
+      ).then(function (resp) {
+        // console.log(resp);
         for (let i = 0; i < resp.list.length; i++) {
           // 格式化日期
           resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
@@ -179,9 +194,20 @@ export default {
           );
         }
         _this.tableData = resp.list;
-        _this.pages = resp.pages * 10;
-        _this.pageInfo.currentPageNum = currentPageNum;
+        _this.pageInfo.total = resp.total;
       });
+    },
+    handleCurrentChange(currentPageNum) {
+      // 翻页
+      const _this = this;
+      _this.pageInfo.pageNum = currentPageNum;
+      _this.loadData();
+    },
+    handleSizeChange(currentPageSize) {
+      // 改变页大小
+      const _this = this;
+      _this.pageInfo.pageSize = currentPageSize;
+      _this.loadData();
     },
     load(tree, treeNode, resolve) {
       // 加载子权限
@@ -254,6 +280,18 @@ export default {
           console.log("删除失败");
         }
       });
+    },
+    search() {
+      const _this = this;
+      _this.pageInfo.pageNum = 1;
+      _this.loadData();
+    },
+    restForm() {
+      const _this = this;
+      _this.sysPerms.menuName = "";
+      _this.sysPerms.path = "";
+      _this.sysPerms.createTimeStart = "";
+      _this.sysPerms.createTimeEnd = "";
     },
   },
   mounted() {

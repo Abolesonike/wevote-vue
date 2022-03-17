@@ -122,7 +122,7 @@ export default {
       // 页面树形控件数据
       permsTree: {
         // 树形控件的label对应数据的path
-        label: "path",
+        label: "label",
         children: "children",
       },
       // 当前角色选中的权限
@@ -159,6 +159,7 @@ export default {
           resp.list[i].modifyTime = dayjs(resp.list[i].modifyTime).format(
             "YYYY-MM-DD HH:mm:ss"
           );
+          resp.list[i].label = resp.list[i].menuName + " " + resp.list[i].path;
         }
         _this.roleTableData = resp.list;
         _this.pages = resp.pages * 10;
@@ -216,7 +217,17 @@ export default {
       _this.checkedPerms = [];
       _this.modifyRoleId = roleId;
       permsTreeList(roleId).then(function (resp) {
-        // console.log(resp);
+        console.log(resp);
+        for (let i = 0; i < resp.parentList.length; i++) {
+          resp.parentList[i].label =
+            resp.parentList[i].menuName + " " + resp.parentList[i].path;
+          for (let j = 0; j < resp.parentList[i].children.length; j++) {
+            resp.parentList[i].children[j].label =
+              resp.parentList[i].children[j].menuName +
+              " " +
+              resp.parentList[i].children[j].path;
+          }
+        }
         _this.permsTreeData = resp.parentList;
         _this.checkedPerms = resp.permsIds;
         _this.roleDialogVisible = true;

@@ -35,7 +35,7 @@
       <el-button type="primary" icon="el-icon-search" @click="search()"
         >查询</el-button
       >
-      <el-button icon="el-icon-refresh-left" @click="sysUser = {}"
+      <el-button icon="el-icon-refresh-left" @click="restSysUser()"
         >重置</el-button
       >
     </el-form-item>
@@ -325,6 +325,13 @@ export default {
     search() {
       const _this = this;
       _this.loadData();
+    },
+    restSysUser() {
+      const _this = this;
+      _this.sysUser.username = "";
+      _this.sysUser.createTimeStart = "";
+      _this.sysUser.createTimeEnd = "";
+      _this.sysUser.roleName = "";
     },
   },
   mounted() {

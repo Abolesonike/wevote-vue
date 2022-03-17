@@ -5,3 +5,8 @@ import qs from "qs";
 export const login = function (data) {
   return req("post", "auth-service/login", qs.stringify(data));
 };
+
+// 发送登录数据
+export const signIn = function (sysUser, verifyCode) {
+  return req("post", "auth-service/signIn?verifyCode=" + verifyCode, sysUser);
+};

@@ -9,3 +9,15 @@ export const getComment = function (postId) {
 export const sendComment = function (comment) {
   return req("post", "comment-service/comment/sendComment", comment);
 };
+
+// 条件查询帖子
+export const selectComment = function (pageNum, pageSize, comment) {
+  return req(
+    "post",
+    "/comment-service/comment/select?pageNum=" +
+      pageNum +
+      "&pageSize=" +
+      +pageSize,
+    comment
+  );
+};

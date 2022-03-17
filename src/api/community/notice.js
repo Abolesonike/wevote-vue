@@ -16,7 +16,7 @@ export const insertNotice = function (notice) {
 
 // 删除
 export const deleteNotice = function (notice) {
-  return req("delete", "/post-service/notice/delete", notice);
+  return req("post", "/post-service/notice/delete", notice);
 };
 
 // 修改

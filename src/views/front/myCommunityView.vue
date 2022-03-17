@@ -13,11 +13,35 @@
           <position-card :msg="positionData"></position-card>
           <el-card class="postFilter"
             ><div>
-              <span style="font-size: small; color: whitesmoke">最新</span>
+              <el-link
+                :underline="false"
+                style="font-size: small; color: whitesmoke"
+                @click="changeOrder(0)"
+                ><span
+                  v-if="order === 0 && post.type !== 1"
+                  style="font-weight: bold"
+                  >最新</span
+                >
+                <span v-if="order !== 0 || post.type === 1">最新</span></el-link
+              >
               <el-divider direction="vertical"></el-divider>
-              <span style="font-size: small; color: whitesmoke">热门</span>
+              <el-link
+                :underline="false"
+                style="font-size: small; color: whitesmoke"
+                @click="changeOrder(1)"
+                ><span v-if="order === 1" style="font-weight: bold">热门</span>
+                <span v-if="order !== 1">热门</span></el-link
+              >
               <el-divider direction="vertical"></el-divider>
-              <span style="font-size: small; color: whitesmoke">精华</span>
+              <el-link
+                :underline="false"
+                style="font-size: small; color: whitesmoke"
+                @click="postType1()"
+                ><span v-if="post.type === 1" style="font-weight: bold"
+                  >精华</span
+                >
+                <span v-if="post.type !== 1">精华</span></el-link
+              >
             </div></el-card
           >
 
@@ -113,6 +137,8 @@ export default {
         pageSize: 5, // 页大小
         pages: 10,
       },
+      // 排序，0：时间；1：热度
+      order: 0,
     };
   },
   methods: {
@@ -125,6 +151,7 @@ export default {
       selectPostVo(
         this.pageInfo.pageNum,
         this.pageInfo.pageSize,
+        this.order,
         _this.post
       ).then(function (resp) {
         // console.log(resp);
@@ -149,25 +176,22 @@ export default {
     handleCurrentChange(currentPageNum) {
       // 翻页
       const _this = this;
-      selectPostVo(currentPageNum, this.pageInfo.pageSize, _this.post).then(
-        function (resp) {
-          // console.log(resp);
-          for (let i = 0; i < resp.list.length; i++) {
-            // 格式化日期
-            resp.list[i].createTime = dayjs(resp.list[i].createTime).format(
-              "YYYY-MM-DD HH:mm:ss"
-            );
-            // 去掉内容中的图片
-            const data = removeImg(resp.list[i].content);
-            resp.list[i].content = data["content"];
-            resp.list[i].imgList = data["imgs"];
-            // 去掉投票
-            resp.list[i].content = removeVote(resp.list[i].content);
-          }
-          _this.postDataList = resp.list;
-          _this.pageInfo.pages = resp.pages * 10;
-        }
-      );
+      _this.pageInfo.pageNum = currentPageNum;
+      _this.loadData();
+    },
+    changeOrder(order) {
+      const _this = this;
+      _this.pageInfo.pageNum = 1;
+      _this.order = order;
+      _this.post.type = 0;
+      _this.loadData();
+    },
+    postType1() {
+      const _this = this;
+      _this.pageInfo.pageNum = 1;
+      _this.order = 0;
+      _this.post.type = 1;
+      _this.loadData();
     },
   },
   watch: {
