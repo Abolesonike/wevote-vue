@@ -67,6 +67,15 @@
         ></el-col>
         <el-col class="hidden-md-and-down" :xl="5"></el-col>
       </el-row>
+      <el-affix
+        position="bottom"
+        :offset="120"
+        style="position: absolute; right: 50px"
+      >
+        <el-button type="primary" @click="createPost"
+          ><i class="icon-bi iconfont"></i
+        ></el-button>
+      </el-affix>
     </el-main>
     <el-footer style="background-color: #50616d; height: 100px">
       <Footer></Footer>
@@ -86,15 +95,6 @@
       Top
     </div>
   </el-backtop>
-  <el-affix
-    position="bottom"
-    :offset="100"
-    style="position: absolute; right: 32px"
-  >
-    <el-button type="primary" @click="createPost"
-      ><i class="icon-bi iconfont"></i
-    ></el-button>
-  </el-affix>
 </template>
 
 <script>

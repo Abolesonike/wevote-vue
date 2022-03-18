@@ -61,7 +61,7 @@
       <Footer></Footer>
     </el-footer>
   </el-container>
-  <el-backtop />
+  <el-backtop/>
 </template>
 
 <script>

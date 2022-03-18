@@ -13,7 +13,17 @@
       <i class="icon-tuandui iconfont"></i>成员:{{ data.userNum }}
     </p>
     <div style="height: 100px">
-      <p style="margin: 0; font-size: small">
+      <p
+        style="
+          margin: 0;
+          font-size: small;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 5;
+          -webkit-box-orient: vertical;
+        "
+      >
         {{ data.introduction }}
       </p>
     </div>

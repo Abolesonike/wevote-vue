@@ -63,7 +63,7 @@
               @click="gotoBack()"
               >后台管理</el-dropdown-item
             >
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -100,6 +100,8 @@ import "element-plus/theme-chalk/display.css";
 import AsideMenu from "@/components/AsideMenu";
 import VueCookies from "vue-cookies";
 import { selectUser } from "@/api/user/user";
+
+const { logout } = require("@/api/auth/auth");
 export default {
   name: "test",
   components: { AsideMenu },
@@ -141,6 +143,16 @@ export default {
     gotoBack() {
       const _this = this;
       _this.$router.push("/back");
+    },
+    logout() {
+      const _this = this;
+      logout().then(function (resp) {
+        if (resp.code === 200) {
+          VueCookies.remove("token");
+          VueCookies.remove("loginUserId");
+          _this.$router.push("/login");
+        }
+      });
     },
   },
   mounted() {

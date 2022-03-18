@@ -6,11 +6,12 @@ export const login = function (data) {
   return req("post", "auth-service/login", qs.stringify(data));
 };
 
-
 export const signIn = function (sysUser, verifyCode) {
   return req("post", "auth-service/signIn?verifyCode=" + verifyCode, sysUser);
 };
-
+export const logout = function () {
+  return req("get", "auth-service/logout");
+};
 
 export const resetPassword = function (tel, password, verifyCode) {
   return req("get", "auth-service/resetPassword", {

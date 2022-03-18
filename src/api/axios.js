@@ -1,6 +1,7 @@
 import axios from "axios";
 import VueCookies from "vue-cookies";
 import router from "@/router";
+import { ElMessage } from "element-plus";
 
 //创建axios的一个实例
 const instance = axios.create({
@@ -29,11 +30,23 @@ instance.interceptors.response.use(
     if (response.data.code === 402) {
       router.push("/login").then((r) => r);
     }
+    if (response.data.code === 401) {
+      ElMessage.error(response.data.message);
+    }
     return response.data;
   },
   function (error) {
     // 对响应错误做点什么
-    //console.log(error);
+    const dic = {
+      "comment-service": "评论服务",
+      "post-service": "投票服务",
+      "auth-service": "认证服务",
+      "file-service": "文件服务",
+    };
+    console.log(error.response);
+    if (error.response.status === 503) {
+      ElMessage.error(dic[error.response.data.path.split("/")[1]] + "不可用");
+    }
     return Promise.reject(error);
   }
 );

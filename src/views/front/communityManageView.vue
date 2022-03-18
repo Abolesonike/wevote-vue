@@ -259,7 +259,7 @@
                     label="发送者"
                     width="80"
                   />
-                  <el-table-column prop="likes" label="点赞" width="80" />
+                  <el-table-column prop="commentNum" label="评论" width="80" />
                   <el-table-column
                     prop="createTime"
                     label="发送时间"
@@ -332,7 +332,12 @@
                     label="发布者"
                     width="80"
                   />
-                  <el-table-column prop="content" label="内容" width="280" />
+                  <el-table-column
+                    prop="content"
+                    :show-overflow-tooltip="true"
+                    label="内容"
+                    width="280"
+                  />
                   <el-table-column prop="status" label="类型" width="150">
                     <template v-slot="scope">
                       <el-select
@@ -355,6 +360,9 @@
                   />
                   <el-table-column label="操作">
                     <template v-slot="scope">
+                      <el-button type="primary"
+                        >编辑</el-button
+                      >
                       <el-button type="danger" @click="deleteNotice(scope.row)"
                         >删除</el-button
                       >

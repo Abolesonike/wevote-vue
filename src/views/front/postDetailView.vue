@@ -26,7 +26,7 @@
                   <span>{{ postData.createTime }}/</span>
                   <span>社区:{{ postData.community }}/</span>
                   <span>点赞:{{ postLike.number }}/</span>
-                  <span>评论:{{postData.commentNum}}</span>
+                  <span>评论:{{ postData.commentNum }}</span>
                 </div>
                 <div>
                   <h3 class="post_title">{{ postData.title }}</h3>

@@ -125,7 +125,7 @@ export default {
       type: [String, Array],
       default:
         " styleselect fontselect fontsizeselect | \
-                  table media charmap emoticons hr insertdatetime ",
+                  table media charmap emoticons hr insertdatetime code",
     },
   },
   data() {

@@ -54,7 +54,12 @@
     </el-form-item>
   </el-form>
   <el-table :data="tableData" style="width: 100%">
-    <el-table-column prop="title" label="标题" width="400" />
+    <el-table-column
+      :show-overflow-tooltip="true"
+      prop="title"
+      label="标题"
+      width="400"
+    />
     <el-table-column prop="postUserName" label="发送者" width="200" />
     <el-table-column prop="createTime" label="发布时间" />
     <el-table-column prop="community" label="社区" />
