@@ -10,12 +10,12 @@ import { createRouter, createWebHistory } from "vue-router";
 // import communityManageView from "@/views/front/communityManageView";
 // import userHomePage from "@/views/front/user/userHomePage";
 // import login from "@/views/login/login";
-
+const Frame = () => import("../views/front/frame");
 const Index = () => import("../views/front/index");
 const searchView = () => import("../views/front/searchView");
 const postDetailView = () => import("@/views/front/postDetailView");
 const postCreateView = () => import("@/views/front/postCreateView");
-const postUpdateView = () => import("@/views/front/postUpdateView")
+const postUpdateView = () => import("@/views/front/postUpdateView");
 const communityView = () => import("@/views/front/communityView");
 const myCommunityView = () => import("@/views/front/myCommunityView");
 const myCreatedCommunityView = () =>
@@ -40,58 +40,65 @@ const IndexB = () => import("../views/back/index");
 const routes = [
   {
     path: "/",
-    name: "index",
-    component: Index,
-  },
-  {
-    path: "/search/:keyword",
-    name: "searchView",
-    component: searchView,
-  },
-  {
-    path: "/postDetail/:id",
-    name: "postDetailView",
-    component: postDetailView,
-  },
-  {
-    path: "/postCreate",
-    name: "postCreateView",
-    component: postCreateView,
-  },
-  {
-    path: "/postUpdate/:id",
-    name: "postUpdateView",
-    component: postUpdateView,
-  },
-  {
-    path: "/community",
-    name: "community",
-    component: communityView,
-  },
-  {
-    path: "/myCommunity/:name",
-    name: "myCommunity",
-    component: myCommunityView,
-  },
-  {
-    path: "/myCreatedCommunity",
-    name: "myCreatedCommunity",
-    component: myCreatedCommunityView,
-  },
-  {
-    path: "/communityManage/:name",
-    name: "communityManage",
-    component: communityManageView,
-  },
-  {
-    path: "/createCommunity",
-    name: "createCommunity",
-    component: communityCreateView,
-  },
-  {
-    path: "/userHome",
-    name: "userHome",
-    component: userHomePage,
+    name: "Frame",
+    component: Frame,
+    children: [
+      {
+        path: "/index",
+        name: "Index",
+        component: Index,
+      },
+      {
+        path: "/search/:keyword",
+        name: "searchView",
+        component: searchView,
+      },
+      {
+        path: "/postDetail/:id",
+        name: "postDetailView",
+        component: postDetailView,
+      },
+      {
+        path: "/postCreate",
+        name: "postCreateView",
+        component: postCreateView,
+      },
+      {
+        path: "/postUpdate/:id",
+        name: "postUpdateView",
+        component: postUpdateView,
+      },
+      {
+        path: "/community",
+        name: "community",
+        component: communityView,
+      },
+      {
+        path: "/myCommunity/:name",
+        name: "myCommunity",
+        component: myCommunityView,
+      },
+      {
+        path: "/myCreatedCommunity",
+        name: "myCreatedCommunity",
+        component: myCreatedCommunityView,
+      },
+      {
+        path: "/communityManage/:name",
+        name: "communityManage",
+        component: communityManageView,
+      },
+      {
+        path: "/createCommunity",
+        name: "createCommunity",
+        component: communityCreateView,
+      },
+      {
+        path: "/userHome",
+        name: "userHome",
+        component: userHomePage,
+      },
+    ],
   },
   {
     path: "/login",

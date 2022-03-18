@@ -1,5 +1,5 @@
 <template>
-  <el-row style="background: #50616d">
+  <el-row :gutter="5" style="background: #50616d">
     <el-col class="hidden-xs-only" :sm="2" :md="1" :lg="1" :xl="2"></el-col>
     <el-col :xs="7" :sm="6" :md="0" :lg="0" :xl="0">
       <h1 style="text-align: center; color: white" @click="drawer = true">
@@ -9,7 +9,7 @@
     <el-col :xs="10" :sm="6" :md="6" :lg="3" :xl="4" style="position: relative">
       <img src="../assets/logo/logo.png" alt="加载失败" />
     </el-col>
-    <el-col class="hidden-xs-only" :sm="4" :md="4" :lg="7" :xl="8">
+    <el-col class="hidden-xs-only" :sm="4" :md="4" :lg="7" :xl="6">
       <!--      <el-menu-->
       <!--        default-active="1"-->
       <!--        class="el-menu-demo"-->
@@ -26,10 +26,10 @@
     </el-col>
     <el-col class="hidden-sm-and-down" :md="9" :lg="7" :xl="5"
       ><el-form
+        style="margin-top: 20px"
         :inline="true"
         :model="searchForm"
         class="demo-form-inline"
-        style="margin: 15px"
         :rules="rules"
         ref="searchForm"
       >
@@ -142,7 +142,7 @@ export default {
     },
     gotoBack() {
       const _this = this;
-      _this.$router.push("/back");
+      _this.$router.push("/back/postTable/2");
     },
     logout() {
       const _this = this;
@@ -160,7 +160,7 @@ export default {
     _this.sysUser.userId = VueCookies.get("loginUserId");
     selectUser(1, 1, _this.sysUser).then(function (resp) {
       _this.sysUser = resp.list[0];
-      console.log(_this.sysUser);
+      //console.log(_this.sysUser);
     });
   },
 };

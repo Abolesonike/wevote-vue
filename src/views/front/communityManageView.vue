@@ -1,402 +1,354 @@
 <template>
-  <el-container>
-    <el-header style="background-color: #50616d">
-      <Header></Header>
-    </el-header>
-    <el-main
-      style="background-color: #424c50; overflow-x: hidden; height: 100%"
-    >
-      <el-row style="background-color: #424c50">
-        <el-col class="hidden-md-and-down" :xl="2"></el-col>
-        <el-col :xs="0" :sm="0" :md="6" :lg="4" :xl="4"
-          ><aside-menu style="margin: 10px"></aside-menu
-        ></el-col>
-        <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="14">
-          <position-card :msg="positionData"></position-card>
-          <el-card class="manageCard">
-            <el-tabs>
-              <el-tab-pane label="社区详情" v-model="community">
-                <div>
-                  <h4>{{ community.name }}</h4>
-                </div>
-                <el-image
-                  src="https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
-                  style="width: 50%"
-                  fit="contain"
-                ></el-image>
-                <p style="font-size: small">
-                  <i class="icon-taolun iconfont"></i>帖子:{{
-                    community.postNum
-                  }}
-                  <i class="icon-tuandui iconfont"></i>成员:{{
-                    community.userNum
-                  }}
-                </p>
-                <div>
-                  <p>
-                    {{ community.introduction }}
-                  </p>
-                </div>
-                <el-button>社区介绍</el-button>
-              </el-tab-pane>
-              <el-tab-pane label="社区成员">
-                <el-form
-                  ref="numberForm"
-                  :inline="true"
-                  :model="user"
-                  class="demo-form-inline"
+  <el-row style="background-color: #424c50">
+    <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="22">
+      <position-card :msg="positionData"></position-card>
+      <el-card class="manageCard">
+        <el-tabs>
+          <el-tab-pane label="社区详情" v-model="community">
+            <div>
+              <h4>{{ community.name }}</h4>
+            </div>
+            <el-image
+              src="https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
+              style="width: 50%"
+              fit="contain"
+            ></el-image>
+            <p style="font-size: small">
+              <i class="icon-taolun iconfont"></i>帖子:{{ community.postNum }}
+              <i class="icon-tuandui iconfont"></i>成员:{{ community.userNum }}
+            </p>
+            <div>
+              <p>
+                {{ community.introduction }}
+              </p>
+            </div>
+            <el-button>社区介绍</el-button>
+          </el-tab-pane>
+          <el-tab-pane label="社区成员">
+            <el-form
+              ref="numberForm"
+              :inline="true"
+              :model="user"
+              class="demo-form-inline"
+            >
+              <el-form-item size="small" prop="username">
+                <el-input
+                  placeholder="用户名"
+                  v-model="user.username"
+                ></el-input>
+              </el-form-item>
+              <el-form-item size="small" prop="commJoinedTimeStart">
+                <el-date-picker
+                  v-model="user.commJoinedTimeStart"
+                  type="date"
+                  placeholder="加入日期从"
                 >
-                  <el-form-item size="small" prop="username">
-                    <el-input
-                      placeholder="用户名"
-                      v-model="user.username"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item size="small" prop="commJoinedTimeStart">
-                    <el-date-picker
-                      v-model="user.commJoinedTimeStart"
-                      type="date"
-                      placeholder="加入日期从"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item size="small" prop="commJoinedTimeEnd">
-                    <el-date-picker
-                      v-model="user.commJoinedTimeEnd"
-                      type="date"
-                      placeholder="加入日期至"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item size="small">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-search"
-                      @click="loadCommunityMember()"
-                      >查询</el-button
-                    >
-                    <el-button
-                      icon="el-icon-refresh-left"
-                      @click="resetForm('numberForm')"
-                      >重置</el-button
-                    >
-                  </el-form-item>
-                </el-form>
-                <el-table :data="userList" style="width: 100%">
-                  <el-table-column prop="username" label="用户名" width="120" />
-                  <el-table-column prop="postNum" label="发帖" width="80" />
-                  <!-- <el-table-column prop="commentNum" label="评论" width="80" />-->
-                  <!-- <el-table-column prop="likeNum" label="点赞" width="80" />-->
-                  <el-table-column prop="postNum" label="角色" width="180">
-                    <template v-slot="scope">
-                      <el-select
-                        v-model="scope.row.commRole"
-                        class="m-2"
-                        placeholder="Select"
-                        size="small"
-                      >
-                        <el-option label="社区组长" :value="1"></el-option>
-                        <el-option label="管理员" :value="2"></el-option>
-                        <el-option label="成员" :value="3"> </el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="commJoinedTime"
-                    label="加入时间"
-                    width="180"
-                  />
-                  <el-table-column label="操作">
-                    <el-button type="primary">移出</el-button>
-                  </el-table-column>
-                </el-table>
-                <br />
-                <el-pagination
-                  background
-                  :total="userPageInfo.total"
-                  @current-change="handleUserCurrentChange"
-                  layout="prev, pager, next"
-                  v-model:page-size="userPageInfo.pageSize"
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item size="small" prop="commJoinedTimeEnd">
+                <el-date-picker
+                  v-model="user.commJoinedTimeEnd"
+                  type="date"
+                  placeholder="加入日期至"
                 >
-                </el-pagination>
-              </el-tab-pane>
-              <el-tab-pane label="成员申请">
-                <el-form
-                  :inline="true"
-                  :model="communityApply"
-                  class="demo-form-inline"
-                  ref="applyForm"
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item size="small">
+                <el-button
+                  type="primary"
+                  icon="el-icon-search"
+                  @click="loadCommunityMember()"
+                  >查询</el-button
                 >
-                  <el-form-item size="small" prop="applyUserName">
-                    <el-input
-                      placeholder="用户名"
-                      v-model="communityApply.applyUserName"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item size="small" prop="applyTimeStart">
-                    <el-date-picker
-                      v-model="communityApply.applyTimeStart"
-                      type="date"
-                      placeholder="申请日期从"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item size="small" prop="applyTimeEnd">
-                    <el-date-picker
-                      v-model="communityApply.applyTimeEnd"
-                      type="date"
-                      placeholder="申请日期至"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item size="small">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-search"
-                      @click="loadCommunityApply()"
-                      >查询</el-button
-                    >
-                    <el-button
-                      icon="el-icon-refresh-left"
-                      @click="resetForm('applyForm')"
-                      >重置</el-button
-                    >
-                  </el-form-item>
-                </el-form>
-                <el-table :data="communityApplyList" style="width: 100%">
-                  <el-table-column
-                    prop="applyUserName"
-                    label="申请用户"
-                    width="120"
-                  />
-                  <el-table-column
-                    prop="applyTime"
-                    label="申请时间"
-                    width="200"
-                  />
-                  <el-table-column
-                    prop="applyReason"
-                    label="申请理由"
-                    width="500"
-                  />
-                  <el-table-column label="操作">
-                    <template v-slot="scope">
-                      <el-button type="primary" @click="applyAgree(scope.row)"
-                        >通过</el-button
-                      >
-                      <el-button
-                        type="primary"
-                        @click="applyDisagree(scope.row)"
-                        >拒绝</el-button
-                      >
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <br />
-                <el-pagination
-                  background
-                  :total="applyPageInfo.total"
-                  @current-change="handleApplyCurrentChange"
-                  layout="prev, pager, next"
-                  v-model:page-size="applyPageInfo.pageSize"
+                <el-button
+                  icon="el-icon-refresh-left"
+                  @click="resetForm('numberForm')"
+                  >重置</el-button
                 >
-                </el-pagination>
-              </el-tab-pane>
-              <el-tab-pane label="投票管理">
-                <el-form
-                  ref="postForm"
-                  :inline="true"
-                  :model="post"
-                  class="demo-form-inline"
+              </el-form-item>
+            </el-form>
+            <el-table :data="userList" style="width: 100%">
+              <el-table-column prop="username" label="用户名" width="120" />
+              <el-table-column prop="postNum" label="发帖" width="80" />
+              <!-- <el-table-column prop="commentNum" label="评论" width="80" />-->
+              <!-- <el-table-column prop="likeNum" label="点赞" width="80" />-->
+              <el-table-column prop="postNum" label="角色" width="180">
+                <template v-slot="scope">
+                  <el-select
+                    v-model="scope.row.commRole"
+                    class="m-2"
+                    placeholder="Select"
+                    size="small"
+                  >
+                    <el-option label="社区组长" :value="1"></el-option>
+                    <el-option label="管理员" :value="2"></el-option>
+                    <el-option label="成员" :value="4"> </el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="commJoinedTime"
+                label="加入时间"
+                width="180"
+              />
+              <el-table-column label="操作">
+                <el-button type="primary">移出</el-button>
+              </el-table-column>
+            </el-table>
+            <br />
+            <el-pagination
+              background
+              :total="userPageInfo.total"
+              @current-change="handleUserCurrentChange"
+              layout="prev, pager, next"
+              v-model:page-size="userPageInfo.pageSize"
+            >
+            </el-pagination>
+          </el-tab-pane>
+          <el-tab-pane label="成员申请">
+            <el-form
+              :inline="true"
+              :model="communityApply"
+              class="demo-form-inline"
+              ref="applyForm"
+            >
+              <el-form-item size="small" prop="applyUserName">
+                <el-input
+                  placeholder="用户名"
+                  v-model="communityApply.applyUserName"
+                ></el-input>
+              </el-form-item>
+              <el-form-item size="small" prop="applyTimeStart">
+                <el-date-picker
+                  v-model="communityApply.applyTimeStart"
+                  type="date"
+                  placeholder="申请日期从"
                 >
-                  <el-form-item size="small" prop="title">
-                    <el-input
-                      placeholder="标题"
-                      v-model="post.title"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item size="small" prop="postUserName">
-                    <el-input
-                      placeholder="发送者"
-                      v-model="post.postUserName"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item size="small" prop="createTimeStart">
-                    <el-date-picker
-                      v-model="post.createTimeStart"
-                      type="date"
-                      placeholder="发送日期从"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item size="small" prop="createTimeEnd">
-                    <el-date-picker
-                      v-model="post.createTimeEnd"
-                      type="date"
-                      placeholder="发送日期至"
-                    >
-                    </el-date-picker>
-                  </el-form-item>
-                  <el-form-item size="small">
-                    <el-button
-                      type="primary"
-                      icon="el-icon-search"
-                      @click="loadCommunityPost()"
-                      >查询</el-button
-                    >
-                    <el-button
-                      icon="el-icon-refresh-left"
-                      @click="resetForm('postForm')"
-                      >重置</el-button
-                    >
-                  </el-form-item>
-                </el-form>
-                <el-table :data="postList" style="width: 100%">
-                  <el-table-column prop="title" label="标题" width="250" />
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item size="small" prop="applyTimeEnd">
+                <el-date-picker
+                  v-model="communityApply.applyTimeEnd"
+                  type="date"
+                  placeholder="申请日期至"
+                >
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item size="small">
+                <el-button
+                  type="primary"
+                  icon="el-icon-search"
+                  @click="loadCommunityApply()"
+                  >查询</el-button
+                >
+                <el-button
+                  icon="el-icon-refresh-left"
+                  @click="resetForm('applyForm')"
+                  >重置</el-button
+                >
+              </el-form-item>
+            </el-form>
+            <el-table :data="communityApplyList" style="width: 100%">
+              <el-table-column
+                prop="applyUserName"
+                label="申请用户"
+                width="120"
+              />
+              <el-table-column prop="applyTime" label="申请时间" width="200" />
+              <el-table-column
+                prop="applyReason"
+                label="申请理由"
+                width="500"
+              />
+              <el-table-column label="操作">
+                <template v-slot="scope">
+                  <el-button type="primary" @click="applyAgree(scope.row)"
+                    >通过</el-button
+                  >
+                  <el-button type="primary" @click="applyDisagree(scope.row)"
+                    >拒绝</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+            <br />
+            <el-pagination
+              background
+              :total="applyPageInfo.total"
+              @current-change="handleApplyCurrentChange"
+              layout="prev, pager, next"
+              v-model:page-size="applyPageInfo.pageSize"
+            >
+            </el-pagination>
+          </el-tab-pane>
+          <el-tab-pane label="投票管理">
+            <el-form
+              ref="postForm"
+              :inline="true"
+              :model="post"
+              class="demo-form-inline"
+            >
+              <el-form-item size="small" prop="title">
+                <el-input placeholder="标题" v-model="post.title"></el-input>
+              </el-form-item>
+              <el-form-item size="small" prop="postUserName">
+                <el-input
+                  placeholder="发送者"
+                  v-model="post.postUserName"
+                ></el-input>
+              </el-form-item>
+              <el-form-item size="small" prop="createTimeStart">
+                <el-date-picker
+                  v-model="post.createTimeStart"
+                  type="date"
+                  placeholder="发送日期从"
+                >
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item size="small" prop="createTimeEnd">
+                <el-date-picker
+                  v-model="post.createTimeEnd"
+                  type="date"
+                  placeholder="发送日期至"
+                >
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item size="small">
+                <el-button
+                  type="primary"
+                  icon="el-icon-search"
+                  @click="loadCommunityPost()"
+                  >查询</el-button
+                >
+                <el-button
+                  icon="el-icon-refresh-left"
+                  @click="resetForm('postForm')"
+                  >重置</el-button
+                >
+              </el-form-item>
+            </el-form>
+            <el-table :data="postList" style="width: 100%">
+              <el-table-column prop="title" label="标题" width="250" />
 
-                  <el-table-column
-                    prop="postUserName"
-                    label="发送者"
-                    width="80"
-                  />
-                  <el-table-column prop="commentNum" label="评论" width="80" />
-                  <el-table-column
-                    prop="createTime"
-                    label="发送时间"
-                    width="200"
-                  />
-                  <el-table-column label="操作">
-                    <template v-slot="scope">
-                      <el-button
-                        type="primary"
-                        @click="postDetail(scope.row.id)"
-                        >详情</el-button
-                      >
-                      <!-- <el-button type="primary">删除</el-button>-->
-                      <el-button
-                        v-if="scope.row.type === 0"
-                        type="primary"
-                        @click="changePostType(scope.row.id, 1)"
-                        >设置精华</el-button
-                      >
-                      <el-button
-                        v-if="scope.row.type === 1"
-                        @click="changePostType(scope.row.id, 0)"
-                        >取消精华</el-button
-                      >
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <br />
-                <el-pagination
-                  background
-                  :total="postPageInfo.total"
-                  @current-change="handlePostCurrentChange"
-                  layout="prev, pager, next"
-                  v-model:page-size="postPageInfo.pageSize"
+              <el-table-column prop="postUserName" label="发送者" width="80" />
+              <el-table-column prop="commentNum" label="评论" width="80" />
+              <el-table-column prop="createTime" label="发送时间" width="200" />
+              <el-table-column label="操作">
+                <template v-slot="scope">
+                  <el-button type="primary" @click="postDetail(scope.row.id)"
+                    >详情</el-button
+                  >
+                  <!-- <el-button type="primary">删除</el-button>-->
+                  <el-button
+                    v-if="scope.row.type === 0"
+                    type="primary"
+                    @click="changePostType(scope.row.id, 1)"
+                    >设置精华</el-button
+                  >
+                  <el-button
+                    v-if="scope.row.type === 1"
+                    @click="changePostType(scope.row.id, 0)"
+                    >取消精华</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+            <br />
+            <el-pagination
+              background
+              :total="postPageInfo.total"
+              @current-change="handlePostCurrentChange"
+              layout="prev, pager, next"
+              v-model:page-size="postPageInfo.pageSize"
+            >
+            </el-pagination>
+          </el-tab-pane>
+          <el-tab-pane label="公告管理">
+            <el-form
+              ref="noticeForm"
+              :model="notice"
+              :rules="noticeRules"
+              size="small"
+              label-position="top"
+            >
+              <el-form-item label="公告标题" prop="title">
+                <el-input
+                  v-model="notice.title"
+                  class="comment-input"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="公告内容" prop="content">
+                <el-input
+                  class="comment-input"
+                  style="background: #424c50"
+                  v-model="notice.content"
+                  :autosize="{ minRows: 6, maxRows: 12 }"
+                  type="textarea"
                 >
-                </el-pagination>
-              </el-tab-pane>
-              <el-tab-pane label="公告管理">
-                <el-form
-                  ref="noticeForm"
-                  :model="notice"
-                  :rules="noticeRules"
-                  size="small"
-                  label-position="top"
-                >
-                  <el-form-item label="公告标题" prop="title">
-                    <el-input
-                      v-model="notice.title"
-                      class="comment-input"
-                    ></el-input>
-                  </el-form-item>
-                  <el-form-item label="公告内容" prop="content">
-                    <el-input
-                      class="comment-input"
-                      style="background: #424c50"
-                      v-model="notice.content"
-                      :autosize="{ minRows: 6, maxRows: 12 }"
-                      type="textarea"
-                    >
-                    </el-input>
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button @click="postNotice()">发布公告</el-button>
-                  </el-form-item>
-                </el-form>
-                <el-table :data="noticeList" style="width: 100%">
-                  <el-table-column prop="title" label="标题" width="180" />
-                  <el-table-column
-                    prop="postUserName"
-                    label="发布者"
-                    width="80"
-                  />
-                  <el-table-column
-                    prop="content"
-                    :show-overflow-tooltip="true"
-                    label="内容"
-                    width="280"
-                  />
-                  <el-table-column prop="status" label="类型" width="150">
-                    <template v-slot="scope">
-                      <el-select
-                        v-model="scope.row.status"
-                        class="m-2"
-                        placeholder="Select"
-                        size="small"
-                        @change="changeNoticeStatus(scope.row)"
-                      >
-                        <el-option label="普通公告" :value="1"> </el-option>
-                        <el-option label="置顶公告" :value="2"> </el-option>
-                        <el-option label="必读公告" :value="3"> </el-option>
-                      </el-select>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="creationDate"
-                    label="发布时间"
-                    width="180"
-                  />
-                  <el-table-column label="操作">
-                    <template v-slot="scope">
-                      <el-button type="primary"
-                        >编辑</el-button
-                      >
-                      <el-button type="danger" @click="deleteNotice(scope.row)"
-                        >删除</el-button
-                      >
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <br />
-                <el-pagination
-                  background
-                  :total="noticePageInfo.total"
-                  @current-change="handleNoticeCurrentChange"
-                  layout="prev, pager, next"
-                  v-model:page-size="noticePageInfo.pageSize"
-                >
-                </el-pagination>
-              </el-tab-pane>
-            </el-tabs>
-          </el-card>
-        </el-col>
-        <el-col class="hidden-md-and-down" :xl="5"></el-col>
-      </el-row>
-    </el-main>
-    <el-footer style="background-color: #50616d; height: 100px">
-      <Footer></Footer>
-    </el-footer>
-  </el-container>
-  <el-backtop />
+                </el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button @click="postNotice()">发布公告</el-button>
+              </el-form-item>
+            </el-form>
+            <el-table :data="noticeList" style="width: 100%">
+              <el-table-column prop="title" label="标题" width="180" />
+              <el-table-column prop="postUserName" label="发布者" width="80" />
+              <el-table-column
+                prop="content"
+                :show-overflow-tooltip="true"
+                label="内容"
+                width="280"
+              />
+              <el-table-column prop="status" label="类型" width="150">
+                <template v-slot="scope">
+                  <el-select
+                    v-model="scope.row.status"
+                    class="m-2"
+                    placeholder="Select"
+                    size="small"
+                    @change="changeNoticeStatus(scope.row)"
+                  >
+                    <el-option label="普通公告" :value="1"> </el-option>
+                    <el-option label="置顶公告" :value="2"> </el-option>
+                    <el-option label="必读公告" :value="3"> </el-option>
+                  </el-select>
+                </template>
+              </el-table-column>
+              <el-table-column
+                prop="creationDate"
+                label="发布时间"
+                width="180"
+              />
+              <el-table-column label="操作">
+                <template v-slot="scope">
+                  <el-button type="primary">编辑</el-button>
+                  <el-button type="danger" @click="deleteNotice(scope.row)"
+                    >删除</el-button
+                  >
+                </template>
+              </el-table-column>
+            </el-table>
+            <br />
+            <el-pagination
+              background
+              :total="noticePageInfo.total"
+              @current-change="handleNoticeCurrentChange"
+              layout="prev, pager, next"
+              v-model:page-size="noticePageInfo.pageSize"
+            >
+            </el-pagination>
+          </el-tab-pane>
+        </el-tabs>
+      </el-card>
+    </el-col>
+    <el-col class="hidden-md-and-down" :xl="5"></el-col>
+  </el-row>
 </template>
 
 <script>
-import Header from "@/components/Header";
-import AsideMenu from "@/components/AsideMenu";
 import positionCard from "@/components/positionCard";
-import Footer from "@/components/Footer";
+
 import { select, selectCommAdmin } from "@/api/community/community";
 import dayjs from "dayjs";
 import {
@@ -415,7 +367,7 @@ import {
 import { getLoginUserId } from "@/api/user/user";
 export default {
   name: "communityManageView",
-  components: { Header, AsideMenu, positionCard, Footer },
+  components: { positionCard },
   data() {
     return {
       positionData: [

@@ -1,119 +1,101 @@
 <template>
-  <el-container>
-    <el-header style="background-color: #50616d">
-      <Header></Header>
-    </el-header>
-    <el-main style="background-color: #424c50; overflow-x: hidden">
-      <el-row>
-        <el-col class="hidden-md-and-down" :xl="2"></el-col>
-        <el-col :xs="0" :sm="0" :md="6" :lg="4" :xl="4"
-          ><aside-menu style="margin: 10px"></aside-menu
-        ></el-col>
-        <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="10">
-          <position-card :msg="positionData"></position-card>
-          <el-card class="post-card" shadow="hover">
-            <el-row>
-              <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2"
-                ><div>
-                  <el-avatar
-                    :size="50"
-                    src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-                  ></el-avatar></div
-              ></el-col>
-              <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
-                ><div>
-                  <span class="post_username">{{ postData.postUserName }}</span>
-                  <span>{{ postData.createTime }}/</span>
-                  <span>社区:{{ postData.community }}/</span>
-                  <span>点赞:{{ postLike.number }}/</span>
-                  <span>评论:{{ postData.commentNum }}</span>
-                </div>
-                <div>
-                  <h3 class="post_title">{{ postData.title }}</h3>
-                </div></el-col
-              >
-            </el-row>
-            <div
-              style="color: #d1d9e0"
-              v-for="(p, index) in postData.content"
-              v-bind:key="p"
-            >
-              <div v-html="p"></div>
-              <vote-card
-                :vote="voteList[index]"
-                v-if="voteList[index] !== undefined"
-              ></vote-card>
+  <el-row>
+    <el-col :xs="24" :sm="24" :md="18" :lg="18" :xl="16">
+      <position-card :msg="positionData"></position-card>
+      <el-card class="post-card" shadow="hover">
+        <el-row>
+          <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2"
+            ><div>
+              <el-avatar
+                :size="50"
+                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+              ></el-avatar></div
+          ></el-col>
+          <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
+            ><div>
+              <span class="post_username">{{ postData.postUserName }}</span>
+              <span>{{ postData.createTime }}/</span>
+              <span>社区:{{ postData.community }}/</span>
+              <span>点赞:{{ postLike.number }}/</span>
+              <span>评论:{{ postData.commentNum }}</span>
             </div>
-            <el-row style="margin: 15px 0 15px 0">
-              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="3">
-                <a @click="like()"
-                  ><i
-                    style="font-size: 20px"
-                    v-if="postLike.isOperated === false"
-                    class="icon-good iconfont"
-                  ></i>
-                  <i
-                    style="font-size: 20px"
-                    v-if="postLike.isOperated === true"
-                    class="icon-good-fill iconfont"
-                  ></i
-                ></a>
-                {{ postLike.number }} 赞
-              </el-col>
-              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="4">
-                <a @click="collection()">
-                  <i
-                    style="font-size: 20px"
-                    v-if="postCollection.isOperated === false"
-                    class="icon-favorites iconfont"
-                  ></i>
-                  <i
-                    style="font-size: 20px"
-                    v-if="postCollection.isOperated === true"
-                    class="icon-favorites-fill iconfont"
-                  ></i>
-                </a>
-                {{ postCollection.number }} 收藏
-              </el-col>
-              <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="4">
-                <i class="icon-xiaoxi2 iconfont"></i>
-                {{ postData.commentNum }} 评论
-              </el-col>
-            </el-row>
-            <comment-input
-              :to-user-id="0"
-              :type="1"
-              :belong="Number(this.$route.params.id)"
-              @commitComment="getComment"
-              style="margin-bottom: 40px"
-            ></comment-input>
-            <commentCard
-              v-for="comment in commentList"
-              v-bind:key="comment.id"
-              :comment="comment"
-              @commitComment1="getComment"
-            ></commentCard>
-          </el-card>
-        </el-col>
-        <el-col :xs="24" :sm="18" :md="18" :lg="18" :xl="6"
-          ><div><HotPost></HotPost></div
-        ></el-col>
-        <el-col class="hidden-md-and-down" :xl="5"></el-col>
-      </el-row>
-    </el-main>
-    <el-footer style="background-color: #50616d; height: 100px">
-      <Footer></Footer>
-    </el-footer>
-  </el-container>
-  <el-backtop />
+            <div>
+              <h3 class="post_title">{{ postData.title }}</h3>
+            </div></el-col
+          >
+        </el-row>
+        <div
+          style="color: #d1d9e0"
+          v-for="(p, index) in postData.content"
+          v-bind:key="p"
+        >
+          <div v-html="p"></div>
+          <vote-card
+            :vote="voteList[index]"
+            v-if="voteList[index] !== undefined"
+          ></vote-card>
+        </div>
+        <el-row style="margin: 15px 0 15px 0">
+          <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="3">
+            <a @click="like()"
+              ><i
+                style="font-size: 20px"
+                v-if="postLike.isOperated === false"
+                class="icon-good iconfont"
+              ></i>
+              <i
+                style="font-size: 20px"
+                v-if="postLike.isOperated === true"
+                class="icon-good-fill iconfont"
+              ></i
+            ></a>
+            {{ postLike.number }} 赞
+          </el-col>
+          <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="4">
+            <a @click="collection()">
+              <i
+                style="font-size: 20px"
+                v-if="postCollection.isOperated === false"
+                class="icon-favorites iconfont"
+              ></i>
+              <i
+                style="font-size: 20px"
+                v-if="postCollection.isOperated === true"
+                class="icon-favorites-fill iconfont"
+              ></i>
+            </a>
+            {{ postCollection.number }} 收藏
+          </el-col>
+          <el-col :xs="8" :sm="6" :md="4" :lg="4" :xl="4">
+            <i class="icon-xiaoxi2 iconfont"></i>
+            {{ postData.commentNum }} 评论
+          </el-col>
+        </el-row>
+        <comment-input
+          :to-user-id="0"
+          :type="1"
+          :belong="Number(this.$route.params.id)"
+          @commitComment="getComment"
+          style="margin-bottom: 40px"
+        ></comment-input>
+        <commentCard
+          v-for="comment in commentList"
+          v-bind:key="comment.id"
+          :comment="comment"
+          @commitComment1="getComment"
+        ></commentCard>
+      </el-card>
+    </el-col>
+    <el-col :xs="24" :sm="18" :md="18" :lg="18" :xl="8"
+      ><div><HotPost></HotPost></div
+    ></el-col>
+    <el-col class="hidden-md-and-down" :xl="5"></el-col>
+  </el-row>
 </template>
 
 <script>
-import Header from "@/components/Header";
 import positionCard from "@/components/positionCard";
-import AsideMenu from "@/components/AsideMenu";
 import HotPost from "@/components/front/HotPost";
-import Footer from "@/components/Footer";
 import commentInput from "@/components/commentInput";
 import commentCard from "@/components/commentCard";
 import voteCard from "@/components/voteCard";
@@ -128,14 +110,11 @@ import VueCookies from "vue-cookies";
 export default {
   name: "postDetailView",
   components: {
-    Header,
-    AsideMenu,
     commentInput,
     commentCard,
     voteCard,
     HotPost,
     positionCard,
-    Footer,
   },
   data() {
     return {

@@ -105,7 +105,7 @@ export default {
             VueCookies.set("token", resp.token, "1D");
             VueCookies.set("loginUserId", resp.data.userId, "1D");
             //_this.$store.commit("setLoginUserId", resp.data.userId);
-            _this.$router.push("/");
+            _this.$router.push("/index");
           } else {
             ElMessage.error(resp.data);
           }

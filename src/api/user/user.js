@@ -1,6 +1,5 @@
 import req from "../axios";
 
-
 // 分页查询所有
 export const selectUser = function (pageNum, pageSize, sysUser) {
   return req(
@@ -9,7 +8,6 @@ export const selectUser = function (pageNum, pageSize, sysUser) {
     sysUser
   );
 };
-
 
 // 禁用启用一个用户
 export const changeEnable = function (id, enable) {
@@ -42,4 +40,13 @@ export const deleteById = function (id) {
 // 获取登录用户id
 export const getLoginUserId = function () {
   return req("get", "auth-service/sysUser/loginUserId");
+};
+
+// 获取登录用户id
+export const managerCommId = function (communityId, userId, type) {
+  return req("get", "auth-service/sysUser/managerCommId", {
+    communityId: communityId,
+    userId: userId,
+    type: type,
+  });
 };

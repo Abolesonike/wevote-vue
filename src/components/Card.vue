@@ -98,6 +98,10 @@
         <i class="icon-xiaoxi2 iconfont"></i>
         {{ post.commentNum }} 评论
       </el-col>
+      <el-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+        来自：
+        {{ post.community }}
+      </el-col>
     </el-row>
   </el-card>
 </template>

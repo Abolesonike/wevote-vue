@@ -1,59 +1,39 @@
 <template>
-  <el-container>
-    <el-header style="background-color: #50616d">
-      <Header></Header>
-    </el-header>
-    <el-main style="background-color: #424c50; overflow-x: hidden">
-      <el-row style="background-color: #424c50">
-        <el-col class="hidden-md-and-down" :xl="2"></el-col>
-        <el-col class="hidden-sm-and-down" :md="6" :lg="4" :xl="4"
-          ><aside-menu style="margin: 10px"></aside-menu
-        ></el-col>
-
-        <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="10">
-          <card
-            v-for="postData in postDataList"
-            v-bind:key="postData"
-            :postData="postData"
-          >
-          </card>
-          <el-pagination
-            background
-            layout="prev, pager, next"
-            :total="pageInfo.total"
-            :page-size="pageInfo.pageSize"
-            @current-change="handleCurrentChange"
-            style="margin-bottom: 10px"
-          >
-          </el-pagination>
-        </el-col>
-        <el-col :xs="24" :sm="24" :md="6" :lg="8" :xl="6"
-          ><div>
-            <HotPost></HotPost><community-recommend></community-recommend></div
-        ></el-col>
-        <el-col class="hidden-md-and-down" :xl="5"></el-col>
-      </el-row>
-    </el-main>
-    <el-footer style="background-color: #50616d; height: 100px">
-      <Footer></Footer>
-    </el-footer>
-  </el-container>
-  <el-backtop />
+  <el-row style="background-color: #424c50">
+    <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="16">
+      <card
+        v-for="postData in postDataList"
+        v-bind:key="postData"
+        :postData="postData"
+      >
+      </card>
+      <el-pagination
+        background
+        layout="prev, pager, next"
+        :total="pageInfo.total"
+        :page-size="pageInfo.pageSize"
+        @current-change="handleCurrentChange"
+        style="margin-bottom: 10px"
+      >
+      </el-pagination>
+    </el-col>
+    <el-col :xs="24" :sm="24" :md="6" :lg="8" :xl="8"
+      ><div><HotPost></HotPost><community-recommend></community-recommend></div
+    ></el-col>
+    <el-col class="hidden-md-and-down" :xl="5"></el-col>
+  </el-row>
 </template>
 
 <script>
-import Header from "@/components/Header";
-import AsideMenu from "@/components/AsideMenu";
 import Card from "@/components/Card";
 import HotPost from "@/components/front/HotPost";
 import communityRecommend from "@/components/communityRecommend";
-import Footer from "@/components/Footer";
 import { removeImg, removeVote } from "@/tools/removeImg";
 import dayjs from "dayjs";
 import { esSearch } from "@/api/es/es";
 export default {
   name: "searchView",
-  components: { Header, AsideMenu, Card, HotPost, communityRecommend, Footer },
+  components: { Card, HotPost, communityRecommend },
   data() {
     return {
       postDataList: [], // 帖子数据

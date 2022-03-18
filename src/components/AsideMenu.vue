@@ -8,7 +8,7 @@
     router
     style="height: 751px"
   >
-    <el-menu-item index="/">
+    <el-menu-item index="/index">
       <i class="icon-dingwei iconfont" style="font-size: large"></i>
       <span> 首页</span>
     </el-menu-item>

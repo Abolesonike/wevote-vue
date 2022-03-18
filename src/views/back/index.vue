@@ -119,6 +119,8 @@ import {
   Menu as IconMenu,
   Setting,
 } from "@element-plus/icons";
+import VueCookies from "vue-cookies";
+const { selectUser } = require("@/api/user/user");
 export default {
   name: "index",
   components: {
@@ -126,6 +128,22 @@ export default {
     Document,
     Setting,
     IconMenu,
+  },
+  data() {
+    return {
+      sysUser: {},
+    };
+  },
+  mounted() {
+    const _this = this;
+    _this.sysUser.userId = VueCookies.get("loginUserId");
+    selectUser(1, 1, _this.sysUser).then(function (resp) {
+      _this.sysUser = resp.list[0];
+      //console.log(_this.sysUser);
+      if (_this.sysUser.roleName !== "超级管理员") {
+        _this.$router.push("/index");
+      }
+    });
   },
   methods: {},
 };
