@@ -1,8 +1,8 @@
 <template>
   <div style="margin-bottom: 20px">
     <el-image
-      src="https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
-      style="width: 100%"
+      :src="data.coverUrl"
+      style="height: 220px"
       fit="contain"
     ></el-image>
     <div style="text-align: center">

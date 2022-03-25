@@ -71,3 +71,27 @@ export const checkIsJoined = function (communityId, userId) {
     userId: userId,
   });
 };
+
+// 改变社区角色
+export const changeCommunityRole = function (communityAdmin) {
+  return req(
+    "post",
+    "/post-service/community/changeCommunityRole",
+    communityAdmin
+  );
+};
+
+// 移除社区成员
+export const removeMember = function (communityAdmin) {
+  return req("post", "/post-service/community/removeMember", communityAdmin);
+};
+
+// 修改社区封面
+export const changeCover = function (communityCovers) {
+  return req("put", "/post-service/community/changeCover", communityCovers);
+};
+
+// 修改社区介绍
+export const changeIntroduction = function (community) {
+  return req("put", "/post-service/community/changeIntroduction", community);
+};

@@ -126,7 +126,7 @@ export default {
         verifyCode: [
           {
             required: true,
-            message: "请输入密码！",
+            message: "请输入验证码！",
             trigger: "change",
           },
         ],

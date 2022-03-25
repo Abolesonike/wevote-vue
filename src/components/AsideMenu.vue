@@ -16,6 +16,10 @@
       <i class="icon-liaotian iconfont" style="font-size: large"></i>
       <span> 社区</span>
     </el-menu-item>
+    <el-menu-item index="/postCreate">
+      <i class="icon-bi iconfont" style="font-size: large"></i>
+      <span> 发起投票</span>
+    </el-menu-item>
     <el-sub-menu index="/myCommunity">
       <template #title>
         <i class="icon-shuqianshoucang iconfont" style="font-size: large"></i>
@@ -40,9 +44,9 @@
       <el-menu-item index="/myCreatedCommunity">社区管理</el-menu-item>
       <!--      <el-menu-item index="/communityManage/生活区">生活区</el-menu-item>-->
     </el-sub-menu>
-    <el-menu-item index="5">
-      <i class="icon-tuandui iconfont" style="font-size: large"></i>
-      <span> 活动中心</span>
+    <el-menu-item index="/userHome">
+      <i class="icon-yonghu iconfont" style="font-size: large"></i>
+      <span> 个人中心</span>
     </el-menu-item>
   </el-menu>
 </template>

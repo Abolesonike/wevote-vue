@@ -1,7 +1,7 @@
 <template>
   <el-card class="communityInfoCard">
     <el-image
-      src="https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
+        :src="community.coverUrl"
       style="width: 100%"
       fit="contain"
     ></el-image>

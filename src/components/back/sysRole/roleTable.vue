@@ -63,28 +63,32 @@
   <el-dialog
     title="添加角色"
     v-model="roleAddDialogVisible"
-    width="20%"
+    width="50%"
     destroy-on-close
   >
     <el-form label-position="top" :model="addRoleFrom">
-      <el-form-item label="角色名称">
-        <el-input v-model="addRoleFrom.roleName"></el-input>
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="addRoleFrom.roleDesc"></el-input>
-      </el-form-item>
-      <el-form-item label="权限分配">
-        <el-tree
-          :props="permsTree"
-          :data="permsTreeData"
-          :default-checked-keys="checkedPerms"
-          node-key="permsId"
-          show-checkbox
-          @check-change="handlePermsCheckChange"
-          ref="tree"
-        >
-        </el-tree>
-      </el-form-item>
+      <el-row>
+        <el-col :span="12"
+          ><el-form-item label="角色名称">
+            <el-input v-model="addRoleFrom.roleName"></el-input>
+          </el-form-item>
+          <el-form-item label="描述">
+            <el-input v-model="addRoleFrom.roleDesc"></el-input> </el-form-item
+        ></el-col>
+        <el-col :span="12">
+          <el-form-item label="权限分配">
+            <el-tree
+              :props="permsTree"
+              :data="permsTreeData"
+              :default-checked-keys="checkedPerms"
+              node-key="permsId"
+              show-checkbox
+              @check-change="handlePermsCheckChange"
+              ref="tree"
+            >
+            </el-tree> </el-form-item
+        ></el-col>
+      </el-row>
     </el-form>
 
     <template #footer>
@@ -277,6 +281,16 @@ export default {
       const _this = this;
       permsTreeList(0).then(function (resp) {
         // console.log(resp);
+        for (let i = 0; i < resp.parentList.length; i++) {
+          resp.parentList[i].label =
+            resp.parentList[i].menuName + " " + resp.parentList[i].path;
+          for (let j = 0; j < resp.parentList[i].children.length; j++) {
+            resp.parentList[i].children[j].label =
+              resp.parentList[i].children[j].menuName +
+              " " +
+              resp.parentList[i].children[j].path;
+          }
+        }
         _this.permsTreeData = resp.parentList;
         _this.checkedPerms = resp.permsIds;
         _this.roleAddDialogVisible = true;

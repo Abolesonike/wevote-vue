@@ -3,10 +3,7 @@
     <el-row>
       <el-col :xs="6" :sm="3" :md="3" :lg="2" :xl="2"
         ><div>
-          <el-avatar
-            :size="50"
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          ></el-avatar></div
+          <el-avatar :size="50" :src="comment.fromUserHead"></el-avatar></div
       ></el-col>
       <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
         ><div>
@@ -18,10 +15,10 @@
     </el-row>
     <p>{{ comment.content }}</p>
     <el-row>
-      <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
-        <i class="icon-zan iconfont"></i>
-        <span class="likeText"> 0</span>
-      </el-col>
+      <!--      <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">-->
+      <!--        <i class="icon-zan iconfont"></i>-->
+      <!--        <span class="likeText"> 0</span>-->
+      <!--      </el-col>-->
       <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
         <i
           class="icon-xiaoxi2 iconfont"
@@ -54,7 +51,7 @@
               ><div>
                 <el-avatar
                   :size="40"
-                  src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                  :src="comment2.fromUserHead"
                 ></el-avatar></div
             ></el-col>
             <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
@@ -71,10 +68,10 @@
           </el-row>
           <p>{{ comment2.content }}</p>
           <el-row>
-            <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
-              <i class="icon-zan iconfont"></i>
-              <span class="likeText"> 0</span>
-            </el-col>
+            <!--            <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">-->
+            <!--              <i class="icon-zan iconfont"></i>-->
+            <!--              <span class="likeText"> 0</span>-->
+            <!--            </el-col>-->
             <el-col :xs="8" :sm="4" :md="4" :lg="4" :xl="2">
               <i
                 class="icon-xiaoxi2 iconfont"

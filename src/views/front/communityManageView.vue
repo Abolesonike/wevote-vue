@@ -9,7 +9,7 @@
               <h4>{{ community.name }}</h4>
             </div>
             <el-image
-              src="https://fuss10.elemecdn.com/1/8e/aeffeb4de74e2fde4bd74fc7b4486jpeg.jpeg"
+              :src="community.coverUrl"
               style="width: 50%"
               fit="contain"
             ></el-image>
@@ -22,7 +22,24 @@
                 {{ community.introduction }}
               </p>
             </div>
-            <el-button>社区介绍</el-button>
+
+            <el-row :gutter="20">
+              <el-col :span="3"
+                ><el-button @click="changeIntroduction" type="primary"
+                  >修改社区介绍</el-button
+                ></el-col
+              >
+              <el-col :span="3"
+                ><el-upload
+                  action=""
+                  :show-file-list="false"
+                  :auto-upload="false"
+                  :on-change="changeCover"
+                >
+                  <el-button type="primary">修改社区封面</el-button>
+                </el-upload></el-col
+              >
+            </el-row>
           </el-tab-pane>
           <el-tab-pane label="社区成员">
             <el-form
@@ -68,17 +85,18 @@
               </el-form-item>
             </el-form>
             <el-table :data="userList" style="width: 100%">
-              <el-table-column prop="username" label="用户名" width="120" />
-              <el-table-column prop="postNum" label="发帖" width="80" />
+              <el-table-column prop="username" label="用户名" width="180" />
+              <el-table-column prop="postNum" label="发帖" width="100" />
               <!-- <el-table-column prop="commentNum" label="评论" width="80" />-->
               <!-- <el-table-column prop="likeNum" label="点赞" width="80" />-->
-              <el-table-column prop="postNum" label="角色" width="180">
+              <el-table-column prop="postNum" label="角色" width="220">
                 <template v-slot="scope">
                   <el-select
                     v-model="scope.row.commRole"
                     class="m-2"
                     placeholder="Select"
                     size="small"
+                    @change="changeCommunityRole(scope.row)"
                   >
                     <el-option label="社区组长" :value="1"></el-option>
                     <el-option label="管理员" :value="2"></el-option>
@@ -89,10 +107,20 @@
               <el-table-column
                 prop="commJoinedTime"
                 label="加入时间"
-                width="180"
+                width="220"
               />
               <el-table-column label="操作">
-                <el-button type="primary">移出</el-button>
+                <template v-slot="scope">
+                  <el-popconfirm
+                    v-if="scope.row.commRole === 4"
+                    @confirm="removeMember(scope.row)"
+                    title="确定要移除该成员吗?"
+                  >
+                    <template #reference>
+                      <el-button type="primary">移除</el-button>
+                    </template>
+                  </el-popconfirm>
+                </template>
               </el-table-column>
             </el-table>
             <br />
@@ -228,11 +256,15 @@
               </el-form-item>
             </el-form>
             <el-table :data="postList" style="width: 100%">
-              <el-table-column prop="title" label="标题" width="250" />
-
-              <el-table-column prop="postUserName" label="发送者" width="80" />
-              <el-table-column prop="commentNum" label="评论" width="80" />
-              <el-table-column prop="createTime" label="发送时间" width="200" />
+              <el-table-column
+                :show-overflow-tooltip="true"
+                prop="title"
+                label="标题"
+                width="250"
+              />
+              <el-table-column prop="postUserName" label="发送者" width="160" />
+              <el-table-column prop="commentNum" label="评论" width="100" />
+              <el-table-column prop="createTime" label="发送时间" width="220" />
               <el-table-column label="操作">
                 <template v-slot="scope">
                   <el-button type="primary" @click="postDetail(scope.row.id)"
@@ -292,7 +324,12 @@
               </el-form-item>
             </el-form>
             <el-table :data="noticeList" style="width: 100%">
-              <el-table-column prop="title" label="标题" width="180" />
+              <el-table-column
+                prop="title"
+                :show-overflow-tooltip="true"
+                label="标题"
+                width="180"
+              />
               <el-table-column prop="postUserName" label="发布者" width="80" />
               <el-table-column
                 prop="content"
@@ -322,13 +359,48 @@
               />
               <el-table-column label="操作">
                 <template v-slot="scope">
-                  <el-button type="primary">编辑</el-button>
-                  <el-button type="danger" @click="deleteNotice(scope.row)"
-                    >删除</el-button
+                  <el-button type="primary" @click="noticeEditor(scope.row)"
+                    >编辑</el-button
                   >
+                  <el-popconfirm
+                    @confirm="deleteNotice(scope.row)"
+                    title="确定要删除吗?"
+                  >
+                    <template #reference>
+                      <el-button type="danger">删除</el-button>
+                    </template>
+                  </el-popconfirm>
                 </template>
               </el-table-column>
             </el-table>
+            <el-dialog v-model="EditorNoticeVisible" title="编辑公告">
+              <el-form :model="EditorNotice" size="small" label-position="top">
+                <el-form-item label="公告标题" prop="title">
+                  <el-input
+                    v-model="EditorNotice.title"
+                    class="comment-input"
+                  ></el-input>
+                </el-form-item>
+                <el-form-item label="公告内容" prop="content">
+                  <el-input
+                    class="comment-input"
+                    style="background: #424c50"
+                    v-model="EditorNotice.content"
+                    :autosize="{ minRows: 6, maxRows: 12 }"
+                    type="textarea"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-form>
+              <template #footer>
+                <span class="dialog-footer">
+                  <el-button @click="updateNoticeCancel()">取消</el-button>
+                  <el-button type="primary" @click="updateNotice()"
+                    >确认</el-button
+                  >
+                </span>
+              </template>
+            </el-dialog>
             <br />
             <el-pagination
               background
@@ -364,7 +436,18 @@ import {
   selectNotice,
   updateNotice,
 } from "@/api/community/notice";
-import { getLoginUserId } from "@/api/user/user";
+
+import VueCookies from "vue-cookies";
+
+const {
+  changeCommunityRole,
+  removeMember,
+  changeCover,
+  changeIntroduction,
+} = require("@/api/community/community");
+const { h } = require("vue");
+const { ElMessageBox } = require("element-plus");
+const { uploadImg } = require("@/api/fileUpload/fileUpload");
 export default {
   name: "communityManageView",
   components: { positionCard },
@@ -397,6 +480,7 @@ export default {
       },
       community: {
         id: 0,
+        introduction: "",
       },
       user: {
         username: "",
@@ -423,6 +507,15 @@ export default {
       },
       postList: [],
       notice: {
+        postUserId: 0,
+        postUserName: "",
+        title: "",
+        content: "",
+        status: 0,
+      },
+      EditorNoticeVisible: false,
+      EditorNotice: {
+        id: 0,
         postUserId: 0,
         postUserName: "",
         title: "",
@@ -461,6 +554,81 @@ export default {
         _this.community = resp.list[0];
       });
     },
+    changeCover(file) {
+      // console.log(file);
+      const _this = this;
+      //上传文件校验
+      this.otherFiles = file.raw;
+      // FormData 对象
+      const formData = new FormData();
+      // 文件对象
+      formData.append("file", this.otherFiles);
+      uploadImg(formData).then((res) => {
+        if (res.success === true) {
+          // console.log(res.downloadUrl);
+          const communityCovers = {};
+          communityCovers.communityId = _this.community.id;
+          communityCovers.coverUrl = res.downloadUrl;
+          changeCover(communityCovers);
+          _this.loadCommunityInfo();
+          ElMessage.success("修改成功");
+        } else {
+          ElMessage.error("图片上传失败:" + res.errorMsg);
+        }
+      });
+    },
+    changeIntroduction() {
+      const _this = this;
+      ElMessageBox({
+        title: "社区介绍",
+        // message: h('p', null, [
+        //   h('span', null, 'Message can be '),
+        //   h('i', { style: 'color: teal' }, 'VNode'),
+        // ]),
+        message: h(
+          "textarea",
+          {
+            style: "width:100%;resize: vertical;outline: none;",
+            // attrs: {
+            //   autocomplete: "off",
+            //   rows: "10",
+            // },
+            rows: 10,
+            autocomplete: "off",
+            resize: "vertical",
+            value: _this.community.introduction,
+            id: "introductionContent",
+            oninput: _this.onIntroductionChange,
+          },
+          []
+        ),
+        showCancelButton: true,
+        confirmButtonText: "确认",
+        cancelButtonText: "取消",
+      })
+        .then(() => {
+          changeIntroduction(_this.community).then(function (resp) {
+            if (resp === true) {
+              ElMessage({
+                type: "success",
+                message: `修改成功`,
+              });
+            }
+          });
+        })
+        .catch(() => {
+          ElMessage({
+            type: "info",
+            message: "取消修改",
+          });
+        });
+    },
+    onIntroductionChange() {
+      const _this = this;
+      _this.community.introduction = document.getElementById(
+        "introductionContent"
+      ).value;
+    },
     loadCommunityMember() {
       const _this = this;
       selectCommAdmin(
@@ -483,6 +651,39 @@ export default {
       const _this = this;
       _this.userPageInfo.pageNum = currentPageNum;
       _this.loadCommunityMember();
+    },
+    changeCommunityRole(row) {
+      const _this = this;
+      // console.log(row);
+      changeCommunityRole({
+        communityId: _this.community.id,
+        userId: row.userId,
+        type: row.commRole,
+      }).then(function (resp) {
+        if (resp === true) {
+          _this.loadCommunityMember();
+          ElMessage.success("操作成功！");
+        } else {
+          _this.loadCommunityMember();
+          ElMessage.error("操作失败！");
+        }
+      });
+    },
+    removeMember(row) {
+      const _this = this;
+      // console.log(row);
+      removeMember({
+        communityId: _this.community.id,
+        userId: row.userId,
+      }).then(function (resp) {
+        if (resp === true) {
+          _this.loadCommunityMember();
+          ElMessage.success("操作成功！");
+        } else {
+          _this.loadCommunityMember();
+          ElMessage.error("操作失败！");
+        }
+      });
     },
     loadCommunityApply() {
       const _this = this;
@@ -634,6 +835,36 @@ export default {
         }
       });
     },
+    noticeEditor(row) {
+      const _this = this;
+      _this.EditorNotice.id = row.id;
+      _this.EditorNotice.postUserId = row.postUserId;
+      _this.EditorNotice.title = row.title;
+      _this.EditorNotice.content = row.content;
+      _this.EditorNotice.status = row.status;
+      _this.EditorNotice.creationDate = row.creationDate;
+      _this.EditorNotice.community = _this.community.id;
+      _this.EditorNoticeVisible = true;
+    },
+    updateNotice() {
+      const _this = this;
+      _this.EditorNotice.creationDate = dayjs(
+        _this.EditorNotice.creationDate
+      ).format("YYYY-MM-DDTHH:mm:ss");
+      updateNotice(_this.EditorNotice).then(function (resp) {
+        if (resp === true) {
+          ElMessage.success("修改成功！");
+          _this.EditorNotice = {};
+          _this.loadCommunityNotice();
+          _this.EditorNoticeVisible = false;
+        }
+      });
+    },
+    updateNoticeCancel() {
+      const _this = this;
+      _this.EditorNotice = {};
+      _this.EditorNoticeVisible = false;
+    },
   },
   mounted() {
     const _this = this;
@@ -642,9 +873,7 @@ export default {
     _this.communityApply.applyCommunity = communityId;
     _this.post.community = communityId;
     _this.notice.community = communityId;
-    getLoginUserId().then(function (resp) {
-      _this.notice.postUserId = resp;
-    });
+    _this.notice.postUserId = VueCookies.get("loginUserId");
     this.loadCommunityInfo();
     this.loadCommunityMember();
     this.loadCommunityApply();

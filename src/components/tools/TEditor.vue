@@ -94,6 +94,8 @@ import "tinymce/plugins/wordcount"; //字数统计
 import voteCreateCard from "@/components/voteCreateCard";
 import { uploadImg } from "@/api/fileUpload/fileUpload";
 
+const {ElMessage} = require("element-plus");
+
 export default {
   name: "TEditor",
   components: {
@@ -268,7 +270,7 @@ export default {
                 </div><br/>`
           );
         } else {
-          console.log("图片上传失败" + res.errorMsg);
+          ElMessage.error("图片上传失败:" + res.errorMsg);
         }
       });
     },

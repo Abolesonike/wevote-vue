@@ -23,6 +23,16 @@ export const update = function (sysUser) {
 };
 
 // 修改一个用户
+export const updateUsername = function (sysUser) {
+  return req("put", "/auth-service/sysUser/updateUsername", sysUser);
+};
+
+// 修改一个用户
+export const updateEmail = function (sysUser) {
+  return req("put", "/auth-service/sysUser/updateEmail", sysUser);
+};
+
+// 修改一个用户
 export const changeRole = function (userId, roleId) {
   return req("put", "/auth-service/sysUser/changeRole", {
     userId: userId,
@@ -42,7 +52,6 @@ export const getLoginUserId = function () {
   return req("get", "auth-service/sysUser/loginUserId");
 };
 
-// 获取登录用户id
 export const managerCommId = function (communityId, userId, type) {
   return req("get", "auth-service/sysUser/managerCommId", {
     communityId: communityId,

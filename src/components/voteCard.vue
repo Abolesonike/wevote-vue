@@ -1,13 +1,18 @@
 <template>
   <div class="vote-card">
     <span class="title"
-      ><i class="icon-toupiao iconfont"></i> {{ this.voteData.title }}</span
+      ><i class="icon-toupiao iconfont"></i> {{ this.voteData.title
+      }}<span v-if="voteData.multiChoose === 1">(单选)</span>
+      <span v-if="voteData.multiChoose !== 1"
+        >（最多选择{{ voteData.multiChoose }}项）</span
+      ></span
     >
     <br />
     <p style="color: #d1d9e0">
       {{ participation }}人参与●结束时间：{{ voteData.endDateFormat }}
     </p>
-    <div v-for="(choose, index) in separateChooses" v-bind:key="choose">
+    <div v-if="voteData.multiChoose !== 1">
+    <div v-for="(choose, index) in separateChooses" v-bind:key="choose" >
       <el-checkbox
         :disabled="checkboxSelectAble[index]"
         class="choose"
@@ -26,13 +31,37 @@
         </el-progress>
       </div>
     </div>
+    </div>
+    <div v-if="voteData.multiChoose === 1">
+      <el-radio-group v-model="radioChoose" @change="handleCheckedChange2">
+        <div v-for="(choose, index) in separateChooses" v-bind:key="choose">
+          <el-radio :label="choose">{{ choose }}</el-radio>
+          <div class="grid-content bg-purple-light">
+            <el-progress
+              :text-inside="true"
+              :stroke-width="18"
+              :percentage="percentage(index)"
+              v-if="isVoted === true"
+            >
+              {{ voteData.voteNumber[index] }}票 {{ percentage(index) }}%
+            </el-progress>
+          </div>
+        </div>
+      </el-radio-group>
+    </div>
     <p style="text-align: center; font-size: 12px" v-if="!isVoted">
       投票后查看结果
     </p>
     <el-button
       @click="voteForThisVote()"
       class="vote-post"
-      v-if="isVoted === false && isEnd === false"
+      v-if="isVoted === false && isEnd === false && voteData.multiChoose !== 1"
+      >投票</el-button
+    >
+    <el-button
+      @click="voteForThisVote2()"
+      class="vote-post"
+      v-if="isVoted === false && isEnd === false && voteData.multiChoose === 1"
       >投票</el-button
     >
     <el-button
@@ -60,13 +89,18 @@ export default {
   data() {
     return {
       voteData: this.vote,
+      radioVoteData: {},
       isVoted: false,
       total: 0,
+      radioTotal: 0,
       loginUserId: "",
       currentSelectNumber: 0,
+      radioCurrentSelectNumber: 0,
       checkboxSelectAble: [],
       checkboxStatus: [],
+      radioCheckboxStatus: [],
       isEnd: false,
+      radioChoose: "",
     };
   },
   mounted() {
@@ -91,7 +125,7 @@ export default {
       this.checkboxSelectAble.push(false);
       this.checkboxStatus.push(false);
     }
-    console.log(typeof this.voteData.endDate);
+    // console.log(typeof this.voteData.endDate);
     let d = new Date(this.voteData.endDate);
     if (Date.now() > d.getTime()) {
       this.isEnd = true;
@@ -149,6 +183,40 @@ export default {
         }
       });
     },
+    voteForThisVote2() {
+      // 检查选项是否全为false
+      let checkboxFalseCount = 0;
+      for (let i = 0; i < this.radioCheckboxStatus.length; i++) {
+        if (this.radioCheckboxStatus[i] === false) {
+          checkboxFalseCount += 1;
+        }
+      }
+      if (checkboxFalseCount === this.radioCheckboxStatus.length) {
+        ElMessage.error({
+          message: "至少选择一项！",
+        });
+        return;
+      }
+      // 把投票数还原为String
+      let voteNumberStr = "";
+      for (let i = 0; i < this.radioVoteData.voteNumber.length; i++) {
+        voteNumberStr += this.radioVoteData.voteNumber[i];
+        voteNumberStr += ",";
+      }
+      this.radioVoteData.voteNumber = voteNumberStr;
+      // 设置投票用户id
+      this.radioVoteData.voteUser += this.loginUserId;
+      this.radioVoteData.voteUser += ",";
+      voteFor(this.radioVoteData).then(function (resp) {
+        if (resp != null) {
+          ElMessage.success({
+            message: "投票成功",
+            type: "success",
+          });
+          location.reload();
+        }
+      });
+    },
     handleCheckedChange(value, key) {
       // 选择框改变事件
       key = key.target._value;
@@ -197,6 +265,38 @@ export default {
       }
       //console.log(this.voteData.voteNumber);
       //console.log(this.currentSelectNumber);
+    },
+    handleCheckedChange2(key) {
+      // 得到选项的index
+      let index = 0;
+      let list = this.voteData.chooses.split(",");
+      list.pop();
+      for (let i = 0; i < list.length; i++) {
+        if (list[i] === key) {
+          break;
+        } else {
+          index += 1;
+        }
+      }
+      this.radioCurrentSelectNumber = this.currentSelectNumber + 1;
+      this.radioTotal = this.total + 1;
+      // 更新的票数
+      this.radioVoteData = JSON.stringify(this.voteData);
+      this.radioVoteData = JSON.parse(this.radioVoteData);
+      let voteNumber = Number(this.voteData.voteNumber[index]);
+      this.radioVoteData.voteNumber[index] = (voteNumber + 1).toString();
+      this.radioCheckboxStatus = JSON.stringify(this.checkboxStatus);
+      this.radioCheckboxStatus = JSON.parse(this.radioCheckboxStatus);
+      this.radioCheckboxStatus[index] = true;
+      // 判断目前选择的选项是否大于最大选项
+      if (this.radioCurrentSelectNumber >= this.voteData.multiChoose) {
+        for (let i = 0; i < this.checkboxSelectAble.length; i++) {
+          if (this.radioCheckboxStatus[i] === false) {
+            this.radioCheckboxStatus[i] = true;
+          }
+        }
+        this.radioCheckboxStatus[index] = false;
+      }
     },
   },
   computed: {

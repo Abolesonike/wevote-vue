@@ -51,7 +51,7 @@
     >
     <el-col :xs="6" :sm="6" :md="2" :lg="1" :xl="1">
       <el-dropdown style="margin: 15px">
-        <el-avatar :size="55" :src="circleUrl"></el-avatar>
+        <el-avatar :size="55" :src="sysUser.headUrl"></el-avatar>
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item @click="gotoHome()">个人主页</el-dropdown-item>

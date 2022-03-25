@@ -13,11 +13,28 @@
         <el-col :span="12"
           ><div><h3>欢迎来到We Vote管理系统</h3></div></el-col
         >
+        <el-col :span="6"></el-col>
+        <el-col :xs="6" :sm="6" :md="2" :lg="1" :xl="1">
+          <el-dropdown style="margin: 15px">
+            <el-avatar :size="55" :src="sysUser.headUrl"></el-avatar>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item @click="gotoHome()"
+                  >个人主页</el-dropdown-item
+                >
+                <el-dropdown-item @click="gotoIndex()"
+                  >返回主页</el-dropdown-item
+                >
+                <el-dropdown-item @click="logout()">退出登录</el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
+        </el-col>
       </el-row>
     </el-header>
     <el-container>
       <el-aside width="200px">
-        <el-menu class="el-menu-vertical-demo">
+        <el-menu class="el-menu-vertical-demo" style="height: 860px">
           <el-sub-menu index="1">
             <template #title>
               <el-icon><location /></el-icon>
@@ -106,7 +123,7 @@
       </el-aside>
       <el-container>
         <el-main> <router-view></router-view></el-main>
-        <el-footer>Footer</el-footer>
+        <el-footer></el-footer>
       </el-container>
     </el-container>
   </el-container>
@@ -121,6 +138,7 @@ import {
 } from "@element-plus/icons";
 import VueCookies from "vue-cookies";
 const { selectUser } = require("@/api/user/user");
+const { logout } = require("@/api/auth/auth");
 export default {
   name: "index",
   components: {
@@ -132,6 +150,7 @@ export default {
   data() {
     return {
       sysUser: {},
+      screenHeight: 0,
     };
   },
   mounted() {
@@ -144,8 +163,29 @@ export default {
         _this.$router.push("/index");
       }
     });
+    this.screenHeight = window.screen.height;
+    console.log(this.screenHeight);
   },
-  methods: {},
+  methods: {
+    gotoHome() {
+      const _this = this;
+      _this.$router.push("/userHome");
+    },
+    gotoIndex() {
+      const _this = this;
+      _this.$router.push("/index");
+    },
+    logout() {
+      const _this = this;
+      logout().then(function (resp) {
+        if (resp.code === 200) {
+          VueCookies.remove("token");
+          VueCookies.remove("loginUserId");
+          _this.$router.push("/login");
+        }
+      });
+    },
+  },
 };
 </script>
 
