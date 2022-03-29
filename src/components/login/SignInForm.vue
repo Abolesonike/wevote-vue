@@ -173,7 +173,7 @@ export default {
       if (reg.test(_this.form.phoneNumber)) {
         axios
           .get(
-            "http://localhost/auth-service/messageCode?phoneNumber=" +
+            "http://localhost:8080/auth-service/messageCode?phoneNumber=" +
               this.form.phoneNumber
           )
           .then((response) => {
