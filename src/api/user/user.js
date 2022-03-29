@@ -59,3 +59,8 @@ export const managerCommId = function (communityId, userId, type) {
     type: type,
   });
 };
+
+// 获取登录用户id
+export const getVerifyCode = function () {
+  return req("get", "/auth-service/verifyCode");
+};

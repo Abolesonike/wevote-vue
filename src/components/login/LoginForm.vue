@@ -119,7 +119,7 @@ export default {
     getVerCode() {
       const _this = this;
       axios
-        .get("http://localhost/auth-service/verifyCode", {
+        .get("http://localhost:8080/auth-service/verifyCode", {
           //和headers   params timeout等属性同级
           responseType: "arraybuffer",
         })

@@ -359,4 +359,7 @@ export default {
   color: #ffff !important;
   --el-border-base: 0px;
 }
+.el-radio {
+  color: white;
+}
 </style>
