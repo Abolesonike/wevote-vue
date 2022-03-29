@@ -5,7 +5,7 @@ import { ElMessage } from "element-plus";
 
 //创建axios的一个实例
 const instance = axios.create({
-  baseURL: "http://localhost:80", //接口统一域名
+  baseURL: "http://47.108.113.58/:8080", //接口统一域名
   timeout: 10000, //设置超时
   withCredentials: true, // 允许携带 cookie
 });
