@@ -78,7 +78,7 @@ export default {
   data() {
     return {
       positionData: [
-        { name: "首页", path: "/" },
+        { name: "首页", path: "/index" },
         { name: "社区", path: "/community" },
         { name: decodeURI(this.$route.path.split("&")[1]), path: "" },
       ],

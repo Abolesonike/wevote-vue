@@ -36,19 +36,14 @@
         </el-input>
       </el-form-item>
       <el-form-item label="上传封面" prop="coverUrl">
+        <el-image style="width: 200px" :src="formData.coverUrl"></el-image>
         <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :file-list="fileList"
-          v-model="formData.coverUrl"
+          action=""
+          :show-file-list="false"
+          :auto-upload="false"
+          :on-change="changeCover"
         >
-          <el-button size="small" type="primary">Click to upload</el-button>
+          <el-button size="small" type="primary">选择文件</el-button>
         </el-upload>
       </el-form-item>
       <el-form-item>
@@ -65,6 +60,7 @@ import { selectCommClassification } from "@/api/community/communityClassificatio
 import { createCommunity } from "@/api/community/community";
 import { ElMessage } from "element-plus";
 import { getLoginUserId } from "@/api/user/user";
+import { uploadImg } from "@/api/fileUpload/fileUpload";
 
 export default {
   name: "communityCreateCard",
@@ -141,6 +137,24 @@ export default {
         } else {
           console.log("error submit!!");
           return false;
+        }
+      });
+    },
+    changeCover(file) {
+      // console.log(file);
+      const _this = this;
+      //上传文件校验
+      this.otherFiles = file.raw;
+      // FormData 对象
+      const formData = new FormData();
+      // 文件对象
+      formData.append("file", this.otherFiles);
+      uploadImg(formData).then((res) => {
+        if (res.success === true) {
+          _this.formData.coverUrl = res.downloadUrl;
+          ElMessage.success("上传成功！");
+        } else {
+          ElMessage.error("图片上传失败:" + res.errorMsg);
         }
       });
     },
