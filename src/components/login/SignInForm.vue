@@ -173,7 +173,7 @@ export default {
       if (reg.test(_this.form.phoneNumber)) {
         axios
           .get(
-            "http://47.108.113.58:8080/auth-service/messageCode?phoneNumber=" +
+            "http://www.wevote.site:8080/auth-service/messageCode?phoneNumber=" +
               this.form.phoneNumber
           )
           .then((response) => {

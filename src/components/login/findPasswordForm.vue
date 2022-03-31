@@ -174,7 +174,7 @@ export default {
     getVerCode() {
       axios
         .get(
-          "http://47.108.113.58:8080/messageCode?phoneNumber=" + this.form.tel
+          "http://www.wevote.site:8080/messageCode?phoneNumber=" + this.form.tel
         )
         .then((response) => {
           //console.log(response);
