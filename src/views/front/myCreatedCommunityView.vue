@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       positionData: [
-        { name: "首页", path: "/" },
+        { name: "首页", path: "/index" },
         { name: "我管理的社区", path: "" },
       ],
       community: {

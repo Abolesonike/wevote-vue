@@ -63,7 +63,7 @@ export default {
   data() {
     return {
       positionData: [
-        { name: "首页", path: "/" },
+        { name: "首页", path: "/index" },
         { name: "社区", path: "" },
       ],
       // 社区分类list

@@ -8,7 +8,7 @@
             ><div>
               <el-avatar
                 :size="50"
-                src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+                :src="postData.postUserHead"
               ></el-avatar></div
           ></el-col>
           <el-col :xs="18" :sm="21" :md="21" :lg="22" :xl="22"
@@ -119,7 +119,7 @@ export default {
   data() {
     return {
       positionData: [
-        { name: "首页", path: "/" },
+        { name: "首页", path: "/index" },
         { name: "生活区", path: "/myCommunity/生活区" },
         { name: "详情", path: "" },
       ],

@@ -454,7 +454,7 @@ export default {
   data() {
     return {
       positionData: [
-        { name: "首页", path: "/" },
+        { name: "首页", path: "/index" },
         { name: "我创建的社区", path: "/myCreatedCommunity" },
         { name: decodeURI(this.$route.path.split("&")[1]), path: "" },
       ],
