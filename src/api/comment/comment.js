@@ -21,3 +21,13 @@ export const selectComment = function (pageNum, pageSize, comment) {
     comment
   );
 };
+
+
+// 发送评论
+export const changeCommentStatus = function (id, status, reason) {
+  return req("get", "comment-service/comment/changeStatus", {
+    id: id,
+    status: status,
+    reason: reason,
+  });
+};

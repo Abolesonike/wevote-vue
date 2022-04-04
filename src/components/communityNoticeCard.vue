@@ -3,13 +3,43 @@
     <p style="color: white">社区公告</p>
     <div v-for="notice in noticeList" v-bind:key="notice.id">
       <p>
-        {{ notice.title
-        }}<span style="font-size: 12px; color: gray"
+        <el-link
+          @click="noticeDetail(notice)"
+          :underline="false"
+          style="
+            color: white;
+            display: inline-block;
+            width: 24vh;
+            overflow: hidden;
+            word-break: keep-all;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+          "
+        >
+          {{ notice.title }}</el-link
+        ><span style="font-size: 12px; color: gray"
           >&nbsp;{{ notice.creationDate }}</span
         >
       </p>
     </div>
   </el-card>
+
+  <el-dialog
+    v-model="centerDialogVisible"
+    :title="noticeTitle"
+    width="80%"
+    destroy-on-close
+    center
+  >
+    <span>{{ noticeContent }}</span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="centerDialogVisible = false"
+          >确认</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -25,6 +55,9 @@ export default {
         community: 0,
       },
       noticeList: [],
+      centerDialogVisible: false,
+      noticeContent: "",
+      noticeTitle: "",
     };
   },
   methods: {
@@ -39,6 +72,12 @@ export default {
         }
         _this.noticeList = resp.list;
       });
+    },
+    noticeDetail(notice) {
+      const _this = this;
+      _this.centerDialogVisible = true;
+      _this.noticeContent = notice.content;
+      _this.noticeTitle = notice.title;
     },
   },
   mounted() {
