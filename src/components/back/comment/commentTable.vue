@@ -42,9 +42,25 @@
     <el-table-column label="操作">
       <template v-slot="scope">
         <el-button
+          type="warning"
+          v-if="status == 2 || status == 3"
+          @click="changeStatus(scope.row.id, 1, '')"
+          plain
+          size="small"
+          >重新审核</el-button
+        >
+        <el-button
+          type="danger"
+          v-if="status == 3"
+          @click="tempDeletePost(scope.row.id)"
+          plain
+          size="small"
+          >删除</el-button
+        >
+        <el-button
           type="success"
           v-if="status == 1"
-          @click="changeStatus(scope.row, 2)"
+          @click="changeStatus(scope.row.id, 2, '')"
           plain
           size="small"
           >通过</el-button
@@ -52,7 +68,7 @@
         <el-button
           type="warning"
           v-if="status == 1"
-          @click="changeStatus(scope.row, 3)"
+          @click="disagreePost(scope.row.id)"
           plain
           size="small"
           >不通过</el-button
@@ -71,17 +87,6 @@
     :page-sizes="[5, 10, 20, 50, 100]"
   >
   </el-pagination>
-  <!-- 帖子详情弹框 -->
-  <el-dialog v-model="dialogVisible" title="详情" width="50%" destroy-on-close>
-    <post-detail :rowData="rowData"></post-detail>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="dialogVisible = false"
-          >确定</el-button
-        >
-      </span>
-    </template>
-  </el-dialog>
   <!-- 删除理由 -->
   <el-dialog v-model="deleteReasonVisible" title="删除理由" width="40%">
     <el-form :model="reason">
@@ -143,15 +148,16 @@
 </template>
 
 <script>
-import { changeStatus, deletePost } from "@/api/post/post";
+import { deletePost } from "@/api/post/post";
 import dayjs from "dayjs";
-import postDetail from "@/components/back/post/postDetail";
 import { ElNotification } from "element-plus";
 import { selectComment } from "@/api/comment/comment";
 
+const { changeCommentStatus } = require("@/api/comment/comment");
+
 export default {
   name: "commentTable",
-  components: { postDetail },
+  components: {},
   data() {
     return {
       pageInfo: {
@@ -222,11 +228,11 @@ export default {
         3: "审核未通过",
         4: "已删除",
       };
-      changeStatus(id, status, reason).then(function (resp) {
+      changeCommentStatus(id, status, reason).then(function (resp) {
         if (resp === true) {
           ElNotification({
             title: "操作成功",
-            message: "一条帖子" + dic[status],
+            message: "一条评论" + dic[status],
             type: "success",
             position: "bottom-right",
           });
@@ -278,11 +284,10 @@ export default {
     },
     restForm() {
       const _this = this;
-      _this.post.title = "";
-      _this.post.postUserName = "";
-      _this.post.community = "";
-      _this.post.createTimeStart = "";
-      _this.post.createTimeEnd = "";
+      _this.comment.fromUserName = "";
+      _this.comment.content = "";
+      _this.comment.createTimeStart = "";
+      _this.comment.createTimeEnd = "";
     },
   },
   mounted() {

@@ -33,7 +33,7 @@
       </el-row>
     </el-header>
     <el-container>
-      <el-aside width="200px">
+      <el-aside width="220px">
         <el-menu class="el-menu-vertical-demo" style="height: 860px">
           <el-sub-menu index="1">
             <template #title>
