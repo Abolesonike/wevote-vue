@@ -332,6 +332,14 @@ export default {
           _this.reason.reason = "";
           _this.disagreeReasonVisible = false;
           _this.deleteReasonVisible = false;
+          if (status === 2) {
+            selectPostVo(1, 1, 0, { id: id }).then(function (resp) {
+              resp.list[0].community;
+              window.zhuge.track("累计投票数", {
+                社区: resp.list[0].community,
+              });
+            });
+          }
         }
       });
     },

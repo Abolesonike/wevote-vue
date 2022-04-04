@@ -106,6 +106,8 @@ import { findByIds } from "@/api/post/vote";
 import dayjs from "dayjs";
 import { getComment } from "@/api/comment/comment";
 import VueCookies from "vue-cookies";
+import {select} from "@/api/community/community";
+
 
 export default {
   name: "postDetailView",
@@ -159,6 +161,12 @@ export default {
             //console.log(resp);
             _this.positionData[1].path =
               "/myCommunity/" + resp.community + "&" + _this.postData.community;
+            select(1, 1, { id: resp.community }).then(function (resp) {
+              window.zhuge.track("查看投票", {
+                "社区" : _this.postData.community,
+                "社区分类": resp.list[0].classificationName,
+              });
+            });
           });
           if (_this.postData.votes !== "") {
             _this.getVote(_this.postData.votes);
