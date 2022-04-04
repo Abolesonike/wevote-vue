@@ -94,7 +94,7 @@ export default {
               }
               vote.chooses = chooses;
             }
-            console.log(this.$refs.content.voteData);
+            //console.log(this.$refs.content.voteData);
             let postUserId = "";
             getLoginUserId().then(function (resp) {
               postUserId = resp;
@@ -103,12 +103,14 @@ export default {
                 _this.$refs.content.voteData,
                 postUserId
               ).then(function (resp) {
-                ElMessage({
-                  message: "发布成功！",
-                  type: "success",
-                });
-                _this.$router.go(-1);
-                console.log(resp);
+                if (resp === true) {
+                  ElMessage({
+                    message: "发布成功！",
+                    type: "success",
+                  });
+                  _this.$router.go(-1);
+                }
+                // console.log(resp);
               });
             });
           } else {
