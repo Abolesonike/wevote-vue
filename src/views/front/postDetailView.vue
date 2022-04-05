@@ -32,6 +32,7 @@
           <div v-html="p"></div>
           <vote-card
             :vote="voteList[index]"
+            :post="postData"
             v-if="voteList[index] !== undefined"
           ></vote-card>
         </div>

@@ -174,7 +174,7 @@ export default {
     getVerCode() {
       axios
         .get(
-          "http://localhost:8080/auth-service/messageCode?phoneNumber=" + this.form.tel
+          "http://localhost:8080/auth-service/messageCodeFind?phoneNumber=" + this.form.tel
         )
         .then((response) => {
           //console.log(response);
