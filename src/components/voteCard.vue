@@ -80,15 +80,20 @@
 import { getLoginUserId } from "@/api/user/user";
 import { voteFor } from "@/api/post/vote";
 import { ElMessage } from "element-plus";
+import {select} from "@/api/community/community";
+
+const {findById} = require("@/api/post/post");
 
 export default {
   name: "voteCard",
   props: {
     vote: {},
+    post:{},
   },
   data() {
     return {
       voteData: this.vote,
+      postData: this.post,
       radioVoteData: {},
       isVoted: false,
       total: 0,
@@ -151,6 +156,7 @@ export default {
     },
     voteForThisVote() {
       // 检查选项是否全为false
+      const _this = this;
       let checkboxFalseCount = 0;
       for (let i = 0; i < this.checkboxStatus.length; i++) {
         if (this.checkboxStatus[i] === false) {
@@ -179,12 +185,21 @@ export default {
             message: "投票成功",
             type: "success",
           });
-          location.reload();
+          findById(_this.postData.id).then(function (resp) {
+            select(1, 1, { id: resp.community }).then(function (resp) {
+              window.zhuge.track("用户投票", {
+                "社区" : resp.list[0].name,
+                "社区分类": resp.list[0].classificationName,
+              });
+              location.reload();
+            });
+          })
         }
       });
     },
     voteForThisVote2() {
       // 检查选项是否全为false
+      const _this = this;
       let checkboxFalseCount = 0;
       for (let i = 0; i < this.radioCheckboxStatus.length; i++) {
         if (this.radioCheckboxStatus[i] === false) {
@@ -213,7 +228,15 @@ export default {
             message: "投票成功",
             type: "success",
           });
-          location.reload();
+          findById(_this.postData.id).then(function (resp) {
+            select(1, 1, { id: resp.community }).then(function (resp) {
+              window.zhuge.track("用户投票", {
+                "社区" : resp.list[0].name,
+                "社区分类": resp.list[0].classificationName,
+              });
+              location.reload();
+            });
+          })
         }
       });
     },
