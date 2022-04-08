@@ -132,6 +132,9 @@ export default {
       const _this = this;
       this.$refs["searchForm"].validate((valid) => {
         if (valid) {
+          window.zhuge.track("搜索", {
+            "关键字": _this.searchForm.keyword,
+          });
           _this.$router.push("/search/" + _this.searchForm.keyword);
         }
       });
