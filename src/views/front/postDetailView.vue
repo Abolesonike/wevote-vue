@@ -17,8 +17,8 @@
               <span>{{ postData.createTime }}/</span>
               <span>社区:{{ postData.community }}/</span>
               <span>点赞:{{ postLike.number }}/</span>
-              <span>评论:{{ postData.commentNum }}</span>
-              <span>浏览量:{{ postData.viewNumber }}</span>
+              <span>评论:{{ postData.commentNum }}/</span>
+              <span>浏览量:{{ viewNumber }}</span>
             </div>
             <div>
               <h3 class="post_title">{{ postData.title }}</h3>
@@ -145,6 +145,7 @@ export default {
         number: 0,
         isOperated: false,
       },
+      viewNumber: 0,
     };
   },
   methods: {
@@ -161,6 +162,7 @@ export default {
           _this.positionData[1].name = _this.postData.community;
           findById(_this.post.id).then(function (resp) {
             //console.log(resp);
+            _this.viewNumber = resp.viewNumber;
             _this.positionData[1].path =
               "/myCommunity/" + resp.community + "&" + _this.postData.community;
             select(1, 1, { id: resp.community }).then(function (resp) {
