@@ -12,25 +12,25 @@
       {{ participation }}人参与●结束时间：{{ voteData.endDateFormat }}
     </p>
     <div v-if="voteData.multiChoose !== 1">
-    <div v-for="(choose, index) in separateChooses" v-bind:key="choose" >
-      <el-checkbox
-        :disabled="checkboxSelectAble[index]"
-        class="choose"
-        :label="choose"
-        :value="index + choose"
-        @change="handleCheckedChange"
-      ></el-checkbox>
-      <div class="grid-content bg-purple-light">
-        <el-progress
-          :text-inside="true"
-          :stroke-width="18"
-          :percentage="percentage(index)"
-          v-if="isVoted === true"
-        >
-          {{ voteData.voteNumber[index] }}票 {{ percentage(index) }}%
-        </el-progress>
+      <div v-for="(choose, index) in separateChooses" v-bind:key="choose">
+        <el-checkbox
+          :disabled="checkboxSelectAble[index]"
+          class="choose"
+          :label="choose"
+          :value="index + choose"
+          @change="handleCheckedChange"
+        ></el-checkbox>
+        <div class="grid-content bg-purple-light">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="18"
+            :percentage="percentage(index)"
+            v-if="isVoted === true"
+          >
+            {{ voteData.voteNumber[index] }}票 {{ percentage(index) }}%
+          </el-progress>
+        </div>
       </div>
-    </div>
     </div>
     <div v-if="voteData.multiChoose === 1">
       <el-radio-group v-model="radioChoose" @change="handleCheckedChange2">
@@ -80,15 +80,15 @@
 import { getLoginUserId } from "@/api/user/user";
 import { voteFor } from "@/api/post/vote";
 import { ElMessage } from "element-plus";
-import {select} from "@/api/community/community";
+import { select } from "@/api/community/community";
 
-const {findById} = require("@/api/post/post");
+const { findById } = require("@/api/post/post");
 
 export default {
   name: "voteCard",
   props: {
     vote: {},
-    post:{},
+    post: {},
   },
   data() {
     return {
@@ -188,12 +188,12 @@ export default {
           findById(_this.postData.id).then(function (resp) {
             select(1, 1, { id: resp.community }).then(function (resp) {
               window.zhuge.track("用户投票", {
-                "社区" : resp.list[0].name,
+                "社区": resp.list[0].name,
                 "社区分类": resp.list[0].classificationName,
               });
               location.reload();
             });
-          })
+          });
         }
       });
     },
@@ -230,13 +230,14 @@ export default {
           });
           findById(_this.postData.id).then(function (resp) {
             select(1, 1, { id: resp.community }).then(function (resp) {
-              window.zhuge.track("用户投票", {
-                "社区" : resp.list[0].name,
-                "社区分类": resp.list[0].classificationName,
-              });
+              window.zhuge
+                .track("用户投票", {
+                  社区: resp.list[0].name,
+                  社区分类: resp.list[0].classificationName,
+                })
               location.reload();
             });
-          })
+          });
         }
       });
     },
