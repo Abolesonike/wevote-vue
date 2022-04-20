@@ -121,7 +121,7 @@ export default {
       type: [String, Array],
       default:
         " addVote addImg | undo redo | bold italic underline strikethrough link | " +
-        " alignleft aligncenter alignright alignjustify outdent indent | bullist numlist | blockquote subscript superscript removeformat | code selectall lineheight",
+        " alignleft aligncenter alignright alignjustify outdent indent | bullist numlist | blockquote subscript superscript removeformat | selectall lineheight",
     },
     toolbar2: {
       type: [String, Array],
