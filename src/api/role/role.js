@@ -36,6 +36,11 @@ export const assignPermissions = function (permsList, roleId) {
   );
 };
 
+// 给角色分配权限
+export const selectAllRole = function (sysRole) {
+  return req("post", "/auth-service/sysRole/selectAll", sysRole);
+};
+
 // 检查角色是否已经被分配给角色
 export const checkIsAssigned = function (roleId) {
   return req("get", "/auth-service/sysRole/checkIsAssigned", {

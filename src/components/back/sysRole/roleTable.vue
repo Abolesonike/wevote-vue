@@ -23,6 +23,21 @@
         </el-switch>
       </template>
     </el-table-column>
+    <el-table-column label="类型" width="150">
+      <template v-slot="scope">
+        <el-select
+          v-model="scope.row.type"
+          class="m-2"
+          placeholder="Select"
+          size="small"
+          @change="changeType(scope.row)"
+        >
+          <el-option :key="1" label="系统角色" :value="1"> </el-option>
+          <el-option :key="2" label="社区角色" :value="2"> </el-option>
+          <el-option :key="3" label="通用角色" :value="3"> </el-option>
+        </el-select>
+      </template>
+    </el-table-column>
     <el-table-column prop="createDate" label="创建时间"> </el-table-column>
     <el-table-column prop="modifyTime" label="修改时间"> </el-table-column>
     <el-table-column label="操作">
@@ -169,6 +184,30 @@ export default {
         _this.pages = resp.pages * 10;
       });
     },
+    changeType(row) {
+      const _this = this;
+      // 将格式化的日期改回原来的格式
+      row.createDate = dayjs(row.createDate).format("YYYY-MM-DDTHH:mm:ss");
+      row.modifyTime = dayjs(row.modifyTime).format("YYYY-MM-DDTHH:mm:ss");
+      update(row).then(function (resp) {
+        if (resp === true) {
+          _this.loadData();
+          ElNotification({
+            title: "操作成功",
+            message: "成功!",
+            type: "success",
+            position: "bottom-right",
+          });
+        } else {
+          ElNotification({
+            title: "操作失败",
+            message: "变更失败",
+            type: "error",
+            position: "bottom-right",
+          });
+        }
+      });
+    },
     changeEnableStatus(row) {
       // 改变是否启用时，触发的函数
       const _this = this;
@@ -246,7 +285,7 @@ export default {
       } else if (checked === true && data.children.length === 0) {
         _this.checkedPerms.push(data.permsId);
       }
-      console.log(_this.checkedPerms);
+      // console.log(_this.checkedPerms);
     },
     commitPermsCheckChange() {
       // 分配权限，点击确定

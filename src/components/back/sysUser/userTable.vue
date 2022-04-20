@@ -135,7 +135,9 @@ import {
 import userDetail from "@/components/back/sysUser/userDetail";
 import dayjs from "dayjs";
 import { ElNotification } from "element-plus";
-import { findAllByEnableStatus } from "@/api/role/role";
+// import { findAllByEnableStatus } from "@/api/role/role";
+
+const {selectAllRole} = require("@/api/role/role");
 
 export default {
   name: "userTable",
@@ -340,7 +342,10 @@ export default {
     _this.sysUser.enableStatus = this.$route.params.enable;
     this.loadData();
     // 查询角色列表
-    findAllByEnableStatus(1).then(function (resp) {
+    // findAllByEnableStatus(1).then(function (resp) {
+    //   _this.roleList = resp;
+    // });
+    selectAllRole({ enableStatus: 1, type: 2 }).then(function (resp) {
       _this.roleList = resp;
     });
   },

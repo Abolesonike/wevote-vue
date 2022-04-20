@@ -98,9 +98,16 @@
                     size="small"
                     @change="changeCommunityRole(scope.row)"
                   >
-                    <el-option label="社区组长" :value="1"></el-option>
-                    <el-option label="管理员" :value="2"></el-option>
-                    <el-option label="成员" :value="4"> </el-option>
+<!--                    <el-option label="社区组长" :value="1"></el-option>-->
+<!--                    <el-option label="管理员" :value="2"></el-option>-->
+<!--                    <el-option label="成员" :value="4"> </el-option>-->
+                    <el-option
+                        v-for="item in roleList"
+                        :key="item.roleId"
+                        :label="item.roleName"
+                        :value="item.roleId"
+                    >
+                    </el-option>
                   </el-select>
                 </template>
               </el-table-column>
@@ -448,6 +455,7 @@ const {
 const { h } = require("vue");
 const { ElMessageBox } = require("element-plus");
 const { uploadImg } = require("@/api/fileUpload/fileUpload");
+const {selectAllRole} = require("@/api/role/role");
 export default {
   name: "communityManageView",
   components: { positionCard },
@@ -463,6 +471,7 @@ export default {
         pageSize: 10,
         total: 0,
       },
+      roleList: [],
       applyPageInfo: {
         pageNum: 1,
         pageSize: 10,
@@ -652,6 +661,7 @@ export default {
       _this.userPageInfo.pageNum = currentPageNum;
       _this.loadCommunityMember();
     },
+
     changeCommunityRole(row) {
       const _this = this;
       // console.log(row);
@@ -879,6 +889,9 @@ export default {
     this.loadCommunityApply();
     this.loadCommunityPost();
     this.loadCommunityNotice();
+    selectAllRole({ enableStatus: 1, type: 1 }).then(function (resp) {
+      _this.roleList = resp;
+    });
   },
 };
 </script>
