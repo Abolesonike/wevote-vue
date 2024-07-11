@@ -34,10 +34,10 @@
         ></el-input>
       </el-form-item>
 
-      <el-form-item label="手机号" prop="phoneNumber">
+      <el-form-item label="邮箱" prop="email">
         <el-input
-          v-model="form.phoneNumber"
-          placeholder="手机号"
+          v-model="form.email"
+          placeholder="邮箱"
           class="input-with-select"
         >
           <template #append>
@@ -65,7 +65,7 @@ export default {
     return {
       form: {
         username: "",
-        phoneNumber: "",
+        email: "",
         password: "",
         rePassword: "",
         verifyCode: "",
@@ -88,16 +88,16 @@ export default {
             trigger: "change",
           },
         ],
-        phoneNumber: [
+        email: [
           {
             required: true,
             message: "请输入手机号！",
             trigger: "change",
           },
           {
-            pattern: /(^((\+86)|(86))?(1[3-9])\d{9}$)/,
-            message: "手机号格式错误！",
-            trigger: "blur",
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"],
           },
         ],
         password: [
@@ -133,7 +133,7 @@ export default {
       },
       sysUser: {
         username: "",
-        tel: "",
+        email: "",
         password: "",
       },
       verCode: "",
@@ -148,7 +148,7 @@ export default {
         }
         const _this = this;
         _this.sysUser.username = _this.form.username;
-        _this.sysUser.tel = _this.form.phoneNumber;
+        _this.sysUser.email = _this.form.email;
         _this.sysUser.password = _this.form.password;
         signIn(_this.sysUser, _this.form.verifyCode).then(function (resp) {
           if (resp.code === 200) {
@@ -165,16 +165,18 @@ export default {
     },
     getVerCode() {
       const _this = this;
-      if (_this.form.phoneNumber === "") {
-        ElMessage.error("请输入手机号！");
+      if (_this.form.email === "") {
+        ElMessage.error("请输入邮箱！");
         return;
       }
-      const reg = new RegExp(/(^((\+86)|(86))?(1[3-9])\d{9}$)/);
-      if (reg.test(_this.form.phoneNumber)) {
+      const reg = new RegExp(
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+      );
+      if (reg.test(_this.form.email)) {
         axios
           .get(
-            "http://localhost:8080/auth-service/messageCode?phoneNumber=" +
-              this.form.phoneNumber
+            "http://localhost:8080/auth-service/sendMailCode?email=" +
+              this.form.email
           )
           .then((response) => {
             //console.log(response);
@@ -189,7 +191,7 @@ export default {
             }
           });
       } else {
-        ElMessage.error("手机号格式错误！");
+        ElMessage.error("邮箱格式错误！");
       }
     },
     validateRePassword(rule, value, callback) {

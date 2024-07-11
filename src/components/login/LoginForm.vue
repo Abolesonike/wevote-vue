@@ -7,8 +7,8 @@
       </div>
     </template>
     <el-form ref="form" :rules="rules" :model="form" label-width="80px">
-      <el-form-item label="手机号" prop="tel">
-        <el-input placeholder="请输入手机号" v-model="form.tel"></el-input>
+      <el-form-item label="邮箱" prop="email">
+        <el-input placeholder="请输入邮箱" v-model="form.email"></el-input>
       </el-form-item>
       <el-form-item label="密码" prop="password">
         <el-input
@@ -55,17 +55,22 @@ export default {
   data() {
     return {
       form: {
-        tel: "",
+        email: "",
         password: "",
         verifyCode: "",
       },
       verCode: "",
       rules: {
-        tel: [
+        email: [
           {
             required: true,
-            message: "请输入手机号！",
+            message: "请输入邮箱！",
             trigger: "change",
+          },
+          {
+            type: "email",
+            message: "请输入正确的邮箱地址",
+            trigger: ["blur", "change"],
           },
         ],
         password: [
